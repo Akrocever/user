@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Krotvan - Empleo y servicio</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Lexend', sans-serif; }
+    </style>
+</head>
+<!-- 1. Ajustado el padding superior a pt-15 (60px) -->
+<body class="bg-gray-100 min-h-screen flex flex-col pt-15">
+
+    <!-- 2. Ajustada la altura del encabezado de h-20 a h-[60px] para que coincida perfectamente -->
+    <header class="bg-[#0f172a] text-white fixed top-0 left-0 right-0 h-[60px] shadow-xl z-50 px-4 md:px-8 flex items-center justify-between border-b border-slate-800">
+        
+        <div class="flex items-center space-x-3">
+            <img src="https://i.ibb.co/TM6Q259h/IMG-20260623-205941-812.jpg" 
+                 alt="Foto de perfil" 
+                 class="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover border-2 border-blue-500 shadow-sm">
+            
+            <span class="text-sm md:text-lg font-bold tracking-wider" style="font-family: 'Orbitron', sans-serif;">
+                Krotvan <span class="text-[#3f94c2]">Reclutador</span>
+            </span>
+        </div>
+
+        <nav class="flex items-center space-x-3 md:space-x-5">
+            <!-- Botón Regalo -->
+            <a href="#" target="_blank" 
+               class="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-full border border-gray-400 text-gray-600 hover:text-white hover:bg-red-500 hover:border-red-500 transition-all duration-150 ease-in-out group active:scale-90 focus:outline-none" 
+               title="Regalo">
+                <i class="fa-solid fa-gift text-base md:text-lg text-[#3f94c2] group-hover:text-white group-hover:scale-110 transition-transform"></i>
+            </a>
+
+            <!-- Botón Billetera (Negocios) -->
+            <a href="https://akrocever.github.io/Sistema/VeoTv.html" target="contenedor-virtual" 
+               class="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-full border border-gray-400 text-gray-600 hover:text-white hover:bg-[#3f94c2] hover:border-[#3f94c2] transition-all duration-150 ease-in-out group active:scale-90 focus:outline-none" 
+               title="Negocios">
+                <i class="fa-solid fa-wallet text-base md:text-lg text-[#3f94c2] group-hover:text-white group-hover:scale-110 transition-transform"></i>
+            </a>
+
+            <!-- Botón WhatsApp -->
+            <a href="https://wa.me/528117967047" target="_blank" 
+               class="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-full border border-gray-400 text-gray-600 hover:text-white hover:bg-green-600 hover:border-green-600 transition-all duration-150 ease-in-out group active:scale-90 focus:outline-none" 
+               title="Contactar por WhatsApp">
+                <i class="fa-brands fa-whatsapp text-lg md:text-xl text-green-600 group-hover:text-white group-hover:scale-110 transition-transform"></i>
+            </a>
+        </nav>
+    </header>
+
+    <!-- 3. Ajustado el cálculo restando los 60px exactos del nuevo grosor del encabezado -->
+    <main class="flex-grow w-full h-[calc(100vh-60px)] overflow-hidden">
+        <iframe name="contenedor-virtual" src="https://akrocever.github.io/Sistema/EmpleosMty/Inicio.html" class="w-full h-full border-none" title="Contenido de Oficina Virtual"></iframe>
+    </main>
+
+</body>
+</html>
+
