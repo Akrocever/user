@@ -470,7 +470,7 @@ body {
         GANANCIAS GENERADAS
       </div>
       <div class="card-body">
-        <div class="amount">$500.00<span class="currency">MXN</span></div>
+        <div class="amount">$1,000.00<span class="currency">MXN</span></div>
         <div class="desc">Utilidad</div>
       </div>
     </div>
@@ -483,7 +483,7 @@ body {
         TOTAL DE INGRESOS
       </div>
       <div class="card-body">
-        <div class="amount">$2,200.00<span class="currency">MXN</span></div>
+        <div class="amount">$3,000.00<span class="currency">MXN</span></div>
         <div class="desc">Retorno de capital + Utilidad</div>
         <div class="desc"> (desde que inició) </div>
       </div>
@@ -497,7 +497,7 @@ body {
         INGRESOS RECIBIDOS
       </div>
       <div class="card-body">
-        <div class="amount">$2,200.00<span class="currency">MXN</span></div>
+        <div class="amount">$3,000.00<span class="currency">MXN</span></div>
         <div class="desc">Retorno de capital + Utilidad</div>
         <div class="desc"> (Ya transferido a tu cuenta) </div>
       </div>
@@ -545,7 +545,7 @@ body {
     <div class="section">
       <div class="title">Capital actual en movimiento:</div>
       <div>
-        <span class="amount">$1,000.00</span>
+        <span class="amount">$0.00</span>
         <span class="currency">MXN</span>
       </div>
     </div>
@@ -562,8 +562,8 @@ body {
 </div>
 
 <script>
-const planNombre       = "PLAN $1,000";
-const montoActual      = 700.00;
+const planNombre       = "PLAN $1,000.00 MXN";
+const montoActual      = 0.00;
 const montoMaximo      = 1500.00;
 const utilidadPorc     = "50%";
 const rentabilidadDiaria = "$50.00 MXN";
@@ -573,7 +573,7 @@ const totalRecibir     = "$1,500.00 MXN";
 const fechaInicio      = "06/06/2026";
 
 document.getElementById("planTitulo").textContent = planNombre;
-document.getElementById("estado").textContent = "En curso";
+document.getElementById("estado").textContent = "Activar";
 document.getElementById("rentabilidad").textContent = `$${montoActual.toFixed(2).replace('.', ',')} MXN`;
 document.getElementById("fecha").textContent = fechaInicio;
 document.getElementById("utilidad").textContent = utilidadPorc;
@@ -613,7 +613,7 @@ document.getElementById("progressDot").style.left = porcentaje + "%";
             <td><span class="lexend-text">2</span></td>
             <td><span class="lexend-text">$1,000.00 MXN</span></td>
             <td><span class="lexend-text">Depósito</span></td>
-            <td><span class="lexend-text">En curso🟢</span></td>
+            <td><span class="lexend-text">1,500.00 MXN</span></td>
             <td><span class="lexend-text">06/06/2026</span></td>
           </tr>
           <tr>
