@@ -21,7 +21,7 @@
 <body class="bg-gray-100 min-h-screen">
 
     <!-- =================================================== -->
-    <!-- 1. FORMULARIO DE INICIO DE SESIÓN (LOGIN)           -->
+    <!-- 1. FORMULARIO DE ACCESO (LOGIN)                     -->
     <!-- =================================================== -->
     <div id="seccion-login" class="flex items-center justify-center min-h-screen px-4 bg-slate-900">
         <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md border border-slate-700">
@@ -43,22 +43,21 @@
                     <input type="password" id="password" required placeholder="••••••••" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
                 </div>
                 
-                <button type="submit" class="w-full bg-[#0f172a] hover:bg-slate-800 text-white font-bold py-2.5 rounded-lg transition duration-200 text-sm shadow-md">
+                <button type="submit" id="btn-submit" class="w-full bg-[#0f172a] hover:bg-slate-800 text-white font-bold py-2.5 rounded-lg transition duration-200 text-sm shadow-md cursor-pointer">
                     Iniciar Sesión
                 </button>
             </form>
 
-            <p id="mensaje-error" class="text-red-500 text-xs text-center mt-3 hidden"></p>
+            <p id="mensaje-estado" class="text-xs text-center mt-3 hidden p-2 rounded-lg"></p>
         </div>
     </div>
 
 
     <!-- =================================================== -->
-    <!-- 2. CONTENIDO PROTEGIDO (OCULTO HASTA HACER LOGIN)    -->
+    <!-- 2. CONTENIDO PROTEGIDO                              -->
     <!-- =================================================== -->
     <div id="contenido-protegido" class="hidden flex-col pt-15 min-h-screen">
 
-        <!-- Encabezado -->
         <header class="bg-[#0f172a] text-white fixed top-0 left-0 right-0 h-[60px] shadow-xl z-50 px-4 md:px-8 flex items-center justify-between border-b border-slate-800">
             
             <div class="flex items-center space-x-3">
@@ -72,21 +71,18 @@
             </div>
 
             <nav class="flex items-center space-x-3 md:space-x-5">
-                <!-- Botón WhatsApp -->
                 <a href="https://wa.me/528126309200" target="_blank" 
                    class="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-full border border-gray-400 text-gray-600 hover:text-white hover:bg-green-600 hover:border-green-600 transition-all duration-150 ease-in-out group active:scale-90 focus:outline-none" 
                    title="Contactar por WhatsApp">
                     <i class="fa-brands fa-whatsapp text-lg md:text-xl text-green-600 group-hover:text-white group-hover:scale-110 transition-transform"></i>
                 </a>
 
-                <!-- Botón Cerrar Sesión -->
-                <button id="btn-logout" class="text-xs bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-md transition">
+                <button id="btn-logout" class="text-xs bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-md transition font-semibold cursor-pointer">
                     Salir
                 </button>
             </nav>
         </header>
 
-        <!-- Contenedor Principal con Iframe -->
         <main class="flex-grow w-full h-[calc(100vh-60px)] overflow-hidden">
             <iframe name="contenedor-virtual" src="https://akrocever.github.io/Sistema/Emp/0Encbzdo.html" class="w-full h-full border-none" title="Contenido de Oficina Virtual"></iframe>
         </main>
@@ -95,7 +91,7 @@
 
 
     <!-- =================================================== -->
-    <!-- 3. LÓGICA DE AUTENTICACIÓN CON SUPABASE            -->
+    <!-- 3. LÓGICA DE AUTENTICACIÓN                         -->
     <!-- =================================================== -->
     <script>
         const SUPABASE_URL = 'https://atiihfgjbpvtjglestyw.supabase.co';
@@ -105,42 +101,43 @@
         const seccionLogin = document.getElementById('seccion-login');
         const contenidoProtegido = document.getElementById('contenido-protegido');
         const formLogin = document.getElementById('form-login');
-        const mensajeError = document.getElementById('mensaje-error');
+        const mensajeEstado = document.getElementById('mensaje-estado');
+        const btnSubmit = document.getElementById('btn-submit');
 
-        // 1. Verificar si ya hay una sesión iniciada al entrar
+        // Verificar sesión activa al entrar
         window.addEventListener('DOMContentLoaded', async () => {
             const { data: { session } } = await supabase.auth.getSession();
             mostrarVista(session);
         });
 
-        // 2. Procesar el formulario de inicio de sesión
+        // Evento Iniciar Sesión
         formLogin.addEventListener('submit', async (e) => {
             e.preventDefault();
-            mensajeError.classList.add('hidden');
+            ocultarMensaje();
 
-            const email = document.getElementById('email').value;
+            const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
 
-            const { data, error } = await supabase.auth.signInWithPassword({
-                email: email,
-                password: password
-            });
+            btnSubmit.disabled = true;
+            mostrarMensaje("Verificando datos...", "bg-blue-100 text-blue-700");
+
+            const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+
+            btnSubmit.disabled = false;
 
             if (error) {
-                mensajeError.textContent = "Datos incorrectos: " + error.message;
-                mensajeError.classList.remove('hidden');
+                mostrarMensaje("Error: " + error.message, "bg-red-100 text-red-700");
             } else {
                 mostrarVista(data.session);
             }
         });
 
-        // 3. Botón para cerrar sesión
+        // Evento Cerrar Sesión
         document.getElementById('btn-logout').addEventListener('click', async () => {
             await supabase.auth.signOut();
             mostrarVista(null);
         });
 
-        // Función para cambiar de pantalla según la sesión
         function mostrarVista(session) {
             if (session) {
                 seccionLogin.classList.add('hidden');
@@ -151,6 +148,16 @@
                 contenidoProtegido.classList.add('hidden');
                 contenidoProtegido.classList.remove('flex');
             }
+        }
+
+        function mostrarMensaje(texto, clases) {
+            mensajeEstado.textContent = texto;
+            mensajeEstado.className = `text-xs text-center mt-3 p-2 rounded-lg ${clases}`;
+            mensajeEstado.classList.remove('hidden');
+        }
+
+        function ocultarMensaje() {
+            mensajeEstado.classList.add('hidden');
         }
     </script>
 </body>
