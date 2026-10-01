@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Akrocever - Registro de Usuario</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&family=Orbitron:wght@600;700&display=swap" rel="stylesheet">
+  
+  <!-- SDK de Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Lexend', sans-serif;
+      background: #f4f6f8;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between; 
+      min-height: 100vh;
+      padding-top: 10px; 
+      padding-bottom: 0;
+    }
+
+    .main-wrapper {
+      width: 100%;
+      max-width: 400px;
+      padding: 10px;
+      flex: 1;
+    }
+
+    /* 🔹 REGLA GLOBAL PARA IMÁGENES */
+    img {
+      max-width: 100%; /* No permite que la imagen sea más ancha que su contenedor */
+      height: auto;    /* Mantiene la proporción */
+      display: block;
+      margin: 0 auto;  /* Centra la imagen */
+    }
+
+    /* 🔹 ESTILO GENERAL DE TARJETAS */
+    .section-card {
+      background: #ffffff;
+      border-radius: 10px;
+      margin-bottom: 5px;
+    }
+
+    /* 🔹 TARJETA DE REGISTRO */
+    .login-card {
+      border: 4px solid #3f8fb4; 
+      box-shadow: 0 0 15px rgba(63, 143, 180, 0.3);
+      overflow: hidden; 
+    }
+
+    /* 🔹 ENCABEZADO */
+    .header {
+      background: #003366; 
+      color: #fff;
+      text-align: center;
+      font-size: 18px;
+      padding: 10px;
+      font-family: 'Orbitron', sans-serif;
+    }
+
+    /* 🔹 SEPARADOR */
+    .separador {
+      border: 0;
+      height: 2px;
+      background: #d1d5db;
+      margin: 25px auto;
+      width: 95%;
+    }
+
+    .login-body {
+      padding: 20px;
+    }
+
+    .login-body label {
+      font-size: 15px;
+      margin-bottom: 5px;
+      display: block;
+      color: #333;
+    }
+
+    .login-body input {
+      width: 100%;
+      padding: 10px;
+      border: 2px solid #3f8fb4; 
+      margin-bottom: 12px;
+      border-radius: 5px;
+      font-family: 'Lexend', sans-serif;
+    }
+
+    .login-body button {
+      width: 100%;
+      padding: 10px;
+      background: #3f8fb4; 
+      color: #fff;
+      border: none;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 16px;
+      border-radius: 5px;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    /* ✨ EFECTO ESPEJO */
+    .login-body button::after {
+      content: "";
+      position: absolute;
+      top: 0; left: -75%;
+      width: 50%; height: 100%;
+      background: linear-gradient(120deg, transparent, rgba(255,255,255,0.6), transparent);
+      transform: skewX(-25deg);
+      animation: brillo 2.5s infinite;
+    }
+
+    @keyframes brillo {
+      0% { left: -75%; }
+      100% { left: 125%; }
+    }
+
+    /* 🔹 CUADRO DE MENSAJES */
+    .mensaje {
+      font-size: 13px;
+      text-align: center;
+      margin-top: 12px;
+      padding: 8px;
+      border-radius: 5px;
+      display: none;
+    }
+
+    .mensaje-exito {
+      background-color: #d1e7dd;
+      color: #0f5132;
+      border: 1px solid #badbcc;
+    }
+
+    .mensaje-error {
+      background-color: #f8d7da;
+      color: #842029;
+      border: 1px solid #f5c2c7;
+    }
+
+    .login-link {
+      text-align: center;
+      margin-top: 15px;
+      font-size: 13px;
+    }
+
+    .login-link a {
+      color: #003366;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .login-link a:hover {
+      text-decoration: underline;
+    }
+
+    /* 🔹 CONTENEDOR DE LA IMAGEN INFERIOR */
+    .image-container {
+      margin-top: 20px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .image-container img {
+      border-radius: 8px; /* Redondea suavemente las esquinas de la imagen */
+    }
+
+    /* 🔹 PIE DE PÁGINA (FOOTER) */
+    footer {
+      width: 100%;
+      background-color: #003366; /* Azul oscuro igual al encabezado */
+      color: #ffffff;
+      text-align: center;
+      padding: 20px 10px;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    footer p {
+      margin: 2px 0;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="main-wrapper">
+    
+    <!-- TARJETA DE REGISTRO -->
+    <div class="section-card login-card">
+      <div class="header">REGISTRO AKROCEVER</div>
+      <div class="login-body">
+        <form id="form-registro">
+          <label>Correo Electrónico</label>
+          <input type="email" id="reg-email" placeholder="usuario@correo.com" required>
+
+          <label>Contraseña</label>
+          <input type="password" id="reg-password" placeholder="••••••••" required minlength="6">
+
+          <button type="submit" id="btn-registrar">Crear Cuenta</button>
+        </form>
+
+        <div id="mensaje-estado" class="mensaje"></div>
+
+        <div class="login-link">
+          ¿Ya tienes una cuenta? <a href="0Kl.html">Inicia sesión aquí</a>
+        </div>
+      </div>
+    </div>
+
+    <hr class="separador">
+
+    <!-- IMAGEN DEBAJO DEL REGISTRO -->
+    <div class="image-container">
+      <img src="https://i.ibb.co/hRdrqtfh/Picsart-26-05-30-20-21-36-686.jpg" alt="Imagen descriptiva">
+    </div>
+
+  </div>
+
+  <!-- PIE DE PÁGINA -->
+  <footer>
+    <p>© Akrocever 2026 | Proyecto independiente impulsado por IA</p>
+    <p>Todos los derechos reservados.</p>
+  </footer>
+
+  <script>
+    // Configuración de Supabase
+    const SUPABASE_URL = 'https://atiihfgjbpvtjglestyw.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_CpzuF8Op8fYh_9znf-tHXg_Ba9xNMnP';
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    const formRegistro = document.getElementById('form-registro');
+    const mensajeEstado = document.getElementById('mensaje-estado');
+    const btnRegistrar = document.getElementById('btn-registrar');
+
+    formRegistro.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const email = document.getElementById('reg-email').value;
+      const password = document.getElementById('reg-password').value;
+
+      btnRegistrar.disabled = true;
+      btnRegistrar.textContent = 'Registrando...';
+      ocultarMensaje();
+
+      // Registro en Supabase
+      const { data, error } = await supabase.auth.signUp({ email, password });
+
+      btnRegistrar.disabled = false;
+      btnRegistrar.textContent = 'Crear Cuenta';
+
+      if (error) {
+        mostrarMensaje('Error: ' + error.message, false);
+      } else {
+        mostrarMensaje('¡Cuenta creada con éxito! Redirigiendo...', true);
+        setTimeout(() => {
+          window.location.href = '0Kl.html'; // Redirige a la página principal de inicio de sesión
+        }, 2000);
+      }
+    });
+
+    function mostrarMensaje(texto, esExito) {
+      mensajeEstado.textContent = texto;
+      mensajeEstado.style.display = 'block';
+      if (esExito) {
+        mensajeEstado.className = 'mensaje mensaje-exito';
+      } else {
+        mensajeEstado.className = 'mensaje mensaje-error';
+      }
+    }
+
+    function ocultarMensaje() {
+      mensajeEstado.style.display = 'none';
+    }
+  </script>
+
+</body>
+</html>
