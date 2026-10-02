@@ -3,179 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar Sesión - Oficina Virtual</title>
-    
-    <!-- Librerías de Estilo e Iconos -->
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Supabase JS SDK -->
+    <title>Prueba de Conexión</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body style="background-color: #111; color: white; padding: 20px; font-family: sans-serif;">
 
-    <style>
-        body { font-family: 'Lexend', sans-serif; }
-    </style>
+    <h2>Prueba de Conexión a Supabase</h2>
+    
+    <button onclick="probar()" style="padding: 15px 25px; font-size: 16px;">PRESIONA AQUÍ PARA PROBAR</button>
+
+    <div id="log" style="margin-top: 20px; color: #00ff88; font-family: monospace;"></div>
 
     <script>
-        // Configuración de Supabase
-        const supabaseUrl = 'https://atiihfgjbpvtjglestyw.supabase.co'; 
-        const supabaseKey = 'sb_publishable_CpzuF8Op8fYh_9znf-tHXg_Ba9xNMnP'; 
-
-        let supabase = null;
-
-        // Inicializar cliente
-        try {
-            if (window.supabase) {
-                supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-            }
-        } catch (e) {
-            console.error("Error inicializando Supabase:", e);
+        function log(msg) {
+            document.getElementById('log').innerHTML += msg + '<br><br>';
         }
 
-        // Buscar la URL privada en la tabla de Supabase y redirigir
-        async function obtenerYRedirigir(email) {
-            try {
-                const { data, error } = await supabase
-                    .from('usuarios_paginas')
-                    .select('pagina_privada')
-                    .eq('email', email)
-                    .maybeSingle();
+        async function probar() {
+            log("1. Botón presionado correctamente.");
 
-                if (error) {
-                    alert('Error de Supabase al leer la tabla: ' + error.message);
-                    return;
-                }
-
-                if (!data) {
-                    alert('No se encontró el correo (' + email + ') en la tabla usuarios_paginas.');
-                    return;
-                }
-
-                if (!data.pagina_privada) {
-                    alert('La columna "pagina_privada" está vacía para el correo: ' + email);
-                    return;
-                }
-
-                // Redirección exitosa
-                window.location.href = data.pagina_privada;
-            } catch (err) {
-                alert('Ocurrió un error inesperado al consultar los datos: ' + err.message);
-            }
-        }
-
-        // Si ya hay una sesión activa, redirigir automáticamente
-        async function redirigirSiYaInicioSesion() {
-            if (!supabase) return;
-            try {
-                const { data: { session } } = await supabase.auth.getSession();
-                if (session && session.user && session.user.email) {
-                    await obtenerYRedirigir(session.user.email);
-                }
-            } catch (err) {
-                console.log("Sin sesión activa previa.");
-            }
-        }
-
-        // Función que procesa el formulario de login
-        async function manejarLogin(event) {
-            event.preventDefault();
-            
-            const btnLogin = document.getElementById('btnLogin');
-            const errorMsg = document.getElementById('errorMsg');
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value;
-
-            if (!supabase) {
-                alert("Error: La librería de Supabase no se cargó correctamente. Revisa tu conexión a internet.");
+            if (!window.supabase) {
+                log("❌ ERROR: La librería de Supabase no cargó. Revisa tu internet.");
                 return;
             }
 
-            btnLogin.disabled = true;
-            btnLogin.innerText = 'Validando credenciales...';
-            errorMsg.classList.add('hidden');
+            log("2. Librería de Supabase cargada.");
 
-            try {
-                // 1. Iniciar sesión en Supabase
-                const { data, error } = await supabase.auth.signInWithPassword({
-                    email: email,
-                    password: password
-                });
+            const url = 'https://atiihfgjbpvtjglestyw.supabase.co';
+            // Reemplaza comillas si es necesario con tu anon key de Supabase:
+            const key = 'sb_publishable_CpzuF8Op8fYh_9znf-tHXg_Ba9xNMnP'; 
 
-                if (error) {
-                    errorMsg.innerText = 'Error al iniciar sesión: ' + error.message;
-                    errorMsg.classList.remove('hidden');
-                    btnLogin.disabled = false;
-                    btnLogin.innerText = 'Iniciar Sesión';
-                } else {
-                    btnLogin.innerText = 'Buscando tu página asignada...';
-                    // 2. Redirigir a la página privada del usuario
-                    await obtenerYRedirigir(email);
-                }
-            } catch (err) {
-                alert('Error al intentar autenticar: ' + err.message);
-                btnLogin.disabled = false;
-                btnLogin.innerText = 'Iniciar Sesión';
+            const client = window.supabase.createClient(url, key);
+
+            log("3. Intentando consultar la tabla usuarios_paginas...");
+
+            const { data, error } = await client.from('usuarios_paginas').select('*');
+
+            if (error) {
+                log("❌ Error de Supabase: " + error.message);
+            } else {
+                log("✅ ¡Conexión Exitosa! Datos recibidos: " + JSON.stringify(data));
             }
         }
-
-        document.addEventListener('DOMContentLoaded', redirigirSiYaInicioSesion);
     </script>
-</head>
-
-<body class="bg-[#0f172a] min-h-screen flex items-center justify-center p-4 text-white">
-
-    <div class="bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl p-6 md:p-8 w-full max-w-md">
-        
-        <!-- Encabezado / Logo -->
-        <div class="text-center mb-6">
-            <h1 class="text-2xl font-bold text-blue-400 tracking-wider mb-1" style="font-family: 'Orbitron', sans-serif;">
-                OFICINA VIRTUAL
-            </h1>
-            <p class="text-slate-400 text-sm">Ingresa tus credenciales para acceder</p>
-        </div>
-
-        <!-- Formulario -->
-        <form onsubmit="manejarLogin(event)" class="space-y-4">
-            
-            <!-- Campo Correo -->
-            <div>
-                <label for="email" class="block text-xs font-semibold uppercase text-slate-300 mb-1">Correo Electrónico</label>
-                <div class="relative">
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500">
-                        <i class="fa-solid fa-envelope"></i>
-                    </span>
-                    <input type="email" id="email" required placeholder="tu@correo.com" 
-                           class="w-full pl-10 pr-4 py-2.5 bg-slate-800 border border-slate-700 rounded-xl focus:outline-none focus:border-blue-500 text-sm text-white placeholder-slate-500 transition-colors">
-                </div>
-            </div>
-
-            <!-- Campo Contraseña -->
-            <div>
-                <label for="password" class="block text-xs font-semibold uppercase text-slate-300 mb-1">Contraseña</label>
-                <div class="relative">
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500">
-                        <i class="fa-solid fa-lock"></i>
-                    </span>
-                    <input type="password" id="password" required placeholder="••••••••" 
-                           class="w-full pl-10 pr-4 py-2.5 bg-slate-800 border border-slate-700 rounded-xl focus:outline-none focus:border-blue-500 text-sm text-white placeholder-slate-500 transition-colors">
-                </div>
-            </div>
-
-            <!-- Mensaje de Error -->
-            <div id="errorMsg" class="hidden text-red-400 text-xs bg-red-950/50 border border-red-900 p-2.5 rounded-lg text-center"></div>
-
-            <!-- Botón Ingresar -->
-            <button type="submit" id="btnLogin" 
-                    class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-xl shadow-lg shadow-blue-600/30 transition-all duration-200 cursor-pointer active:scale-95 text-sm">
-                Iniciar Sesión
-            </button>
-
-        </form>
-    </div>
-
 </body>
 </html>
