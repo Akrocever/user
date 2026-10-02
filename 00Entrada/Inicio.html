@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Oficina Virtual</title>
+    
+    <!-- Librerías de Estilo e Iconos -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,36 +21,54 @@
     </style>
 
     <script>
-        // Configuración de Supabase (Reemplaza con tus llaves reales)
-        const supabaseUrl = 'TU_SUPABASE_URL';
-        const supabaseKey = 'TU_SUPABASE_ANON_KEY';
-        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+        // Configuración de Supabase (URL ajustada sin /rest/v1/)
+        const supabaseUrl = 'https://atiihfgjbpvtjglestyw.supabase.co'; 
+        const supabaseKey = 'sb_publishable_CpzuF8Op8fYh_9znf-tHXg_Ba9xNMnP'; 
+        const URL_LOGIN   = 'https://akrocever.github.io/user/login.html';
 
-        // Verificación de protección de ruta
+        // Inicializar cliente de Supabase
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+        // 1. Proteger la página (verificar si existe sesión)
         async function protegerPagina() {
-            const { data: { session } } = await supabase.auth.getSession();
-            
-            // Si no hay sesión activa, redirige al login
-            if (!session) {
-                window.location.href = 'index.html'; // Cambia 'index.html' por la URL o nombre de tu archivo de login
+            try {
+                const { data: { session }, error } = await supabase.auth.getSession();
+                
+                if (error || !session) {
+                    // Si no hay sesión o hubo un error, redirige al login
+                    window.location.href = URL_LOGIN;
+                } else {
+                    // Si existe sesión, se muestra el contenido de la página
+                    document.body.style.display = 'flex';
+                }
+            } catch (err) {
+                console.error('Error al verificar sesión:', err);
+                window.location.href = URL_LOGIN;
             }
         }
 
-        // Ejecuta la comprobación inmediatamente
-        protegerPagina();
-
-        // Función para cerrar sesión
+        // 2. Función para cerrar sesión
         async function cerrarSesion() {
-            const { error } = await supabase.auth.signOut();
-            if (!error) {
-                window.location.href = 'index.html'; // Redirige al login tras salir
-            } else {
-                alert('Error al cerrar sesión: ' + error.message);
+            try {
+                const { error } = await supabase.auth.signOut();
+                if (error) {
+                    alert('Error al cerrar sesión: ' + error.message);
+                } else {
+                    // Redirige al login tras cerrar sesión exitosamente
+                    window.location.href = URL_LOGIN;
+                }
+            } catch (err) {
+                alert('Ocurrió un error al intentar cerrar sesión: ' + err.message);
             }
         }
+
+        // Ejecutar verificación tan pronto cargue el DOM
+        document.addEventListener('DOMContentLoaded', protegerPagina);
     </script>
 </head>
-<body class="bg-gray-100 min-h-screen flex flex-col pt-20">
+
+<!-- Se inicia oculto para evitar mostrar el contenido antes de autenticar -->
+<body class="bg-gray-100 min-h-screen flex flex-col pt-20" style="display: none;">
 
     <header class="bg-[#0f172a] text-white fixed top-0 left-0 right-0 h-20 shadow-xl z-50 px-4 md:px-8 flex items-center justify-between border-b border-slate-800">
         <div class="flex items-center">
