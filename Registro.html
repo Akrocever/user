@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro - Oficina Virtual</title>
+
+  <!-- Fuentes e Íconos FontAwesome -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Lexend:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #0b0f19;
+      font-family: 'Lexend', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      color: #ffffff;
+    }
+
+    /* Tarjeta principal con bordes redondeados y estilo oscuro */
+    .card-container {
+      background-color: #111726;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 35px 30px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .header-title {
+      font-family: 'Orbitron', sans-serif;
+      color: #38bdf8;
+      font-size: 1.6rem;
+      text-align: center;
+      letter-spacing: 1.5px;
+      margin-bottom: 8px;
+    }
+
+    .header-subtitle {
+      color: #94a3b8;
+      font-size: 0.9rem;
+      text-align: center;
+      margin-bottom: 25px;
+      font-weight: 300;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.8px;
+      color: #cbd5e1;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    /* Inputs estilo oscuro con ícono a la izquierda */
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-wrapper i {
+      position: absolute;
+      left: 16px;
+      color: #64748b;
+      font-size: 0.95rem;
+    }
+
+    .input-field {
+      width: 100%;
+      background-color: #1a2235;
+      border: 1px solid #28354d;
+      border-radius: 12px;
+      padding: 13px 16px 13px 44px;
+      color: #ffffff;
+      font-size: 0.9rem;
+      font-family: 'Lexend', sans-serif;
+      outline: none;
+      transition: all 0.2s ease-in-out;
+    }
+
+    .input-field::placeholder {
+      color: #475569;
+    }
+
+    .input-field:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    }
+
+    /* Botón azul reluciente */
+    .submit-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: #ffffff;
+      border: none;
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      font-family: 'Lexend', sans-serif;
+      cursor: pointer;
+      margin-top: 10px;
+      box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
+      transition: all 0.2s ease-in-out;
+    }
+
+    .submit-btn:hover {
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
+      transform: translateY(-1px);
+    }
+
+    .submit-btn:active {
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card-container">
+    <h1 class="header-title">REGISTRO</h1>
+    <p class="header-subtitle">Completa tus datos para registrarte</p>
+
+    <form id="registroForm">
+      <!-- Nombre -->
+      <div class="form-group">
+        <label class="form-label">Nombre</label>
+        <div class="input-wrapper">
+          <i class="fa-solid fa-user"></i>
+          <input type="text" id="nombre" class="input-field" placeholder="Tu nombre" required>
+        </div>
+      </div>
+
+      <!-- Apellido -->
+      <div class="form-group">
+        <label class="form-label">Apellido</label>
+        <div class="input-wrapper">
+          <i class="fa-solid fa-user-tag"></i>
+          <input type="text" id="apellido" class="input-field" placeholder="Tu apellido" required>
+        </div>
+      </div>
+
+      <!-- Correo Electrónico -->
+      <div class="form-group">
+        <label class="form-label">Correo Electrónico</label>
+        <div class="input-wrapper">
+          <i class="fa-solid fa-envelope"></i>
+          <input type="email" id="email" class="input-field" placeholder="tu@correo.com" required>
+        </div>
+      </div>
+
+      <!-- Contraseña -->
+      <div class="form-group">
+        <label class="form-label">Contraseña</label>
+        <div class="input-wrapper">
+          <i class="fa-solid fa-lock"></i>
+          <input type="password" id="password" class="input-field" placeholder="••••••••" minlength="6" required>
+        </div>
+      </div>
+
+      <!-- Botón de Registro -->
+      <button type="submit" class="submit-btn">Crear Cuenta</button>
+    </form>
+  </div>
+
+  <!-- CDN Supabase JS -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    // Credenciales de tu proyecto Supabase
+    const SUPABASE_URL = 'https://atiihfgjbpvtjglestyw.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_CpzuF8Op8fYh_9znf-tHXg_Ba9xNMnP';
+    
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const form = document.getElementById('registroForm');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const nombre = document.getElementById('nombre').value;
+      const apellido = document.getElementById('apellido').value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      // 1. Registro en Supabase Auth
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email: email,
+        password: password,
+        options: {
+          data: {
+            nombre: nombre,
+            apellido: apellido
+          }
+        }
+      });
+
+      if (authError) {
+        alert('Error en el registro: ' + authError.message);
+        return;
+      }
+
+      // 2. Registro en tu tabla custom usuarios_paginas
+      const { data, error: dbError } = await supabase
+        .from('usuarios_paginas')
+        .insert([
+          { 
+            email: email,
+            pagina_privada: `https://akrocever.github.io/user/${authData.user.id}`
+          }
+        ]);
+
+      if (dbError) {
+        console.error('Error al guardar en tabla:', dbError.message);
+      }
+
+      alert('¡Cuenta creada con éxito!');
+      form.reset();
+    });
+  </script>
+</body>
+</html>
