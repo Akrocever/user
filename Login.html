@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Akrocever - Registro de Usuario</title>
+  <title>Akrocever - Oficina Virtual</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&family=Orbitron:wght@600;700&display=swap" rel="stylesheet">
   
-  <!-- SDK de Supabase -->
+  <!-- SDK oficial de Supabase v2 -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
@@ -38,10 +38,10 @@
 
     /* 🔹 REGLA GLOBAL PARA IMÁGENES */
     img {
-      max-width: 100%; /* No permite que la imagen sea más ancha que su contenedor */
-      height: auto;    /* Mantiene la proporción */
+      max-width: 100%;
+      height: auto;
       display: block;
-      margin: 0 auto;  /* Centra la imagen */
+      margin: 0 auto;
     }
 
     /* 🔹 ESTILO GENERAL DE TARJETAS */
@@ -51,7 +51,7 @@
       margin-bottom: 5px;
     }
 
-    /* 🔹 TARJETA DE REGISTRO */
+    /* 🔹 TARJETA DE LOGIN */
     .login-card {
       border: 4px solid #3f8fb4; 
       box-shadow: 0 0 15px rgba(63, 143, 180, 0.3);
@@ -111,6 +111,11 @@
       cursor: pointer;
     }
 
+    .login-body button:disabled {
+      background: #a0aec0;
+      cursor: not-allowed;
+    }
+
     /* ✨ EFECTO ESPEJO */
     .login-body button::after {
       content: "";
@@ -127,42 +132,14 @@
       100% { left: 125%; }
     }
 
-    /* 🔹 CUADRO DE MENSAJES */
-    .mensaje {
-      font-size: 13px;
-      text-align: center;
-      margin-top: 12px;
+    /* 🔹 MENSAJE DE ESTADO / ERROR */
+    #mensaje-estado {
+      margin-top: 10px;
       padding: 8px;
-      border-radius: 5px;
-      display: none;
-    }
-
-    .mensaje-exito {
-      background-color: #d1e7dd;
-      color: #0f5132;
-      border: 1px solid #badbcc;
-    }
-
-    .mensaje-error {
-      background-color: #f8d7da;
-      color: #842029;
-      border: 1px solid #f5c2c7;
-    }
-
-    .login-link {
-      text-align: center;
-      margin-top: 15px;
       font-size: 13px;
-    }
-
-    .login-link a {
-      color: #003366;
-      font-weight: 600;
-      text-decoration: none;
-    }
-
-    .login-link a:hover {
-      text-decoration: underline;
+      border-radius: 5px;
+      text-align: center;
+      display: none;
     }
 
     /* 🔹 CONTENEDOR DE LA IMAGEN INFERIOR */
@@ -173,13 +150,13 @@
     }
 
     .image-container img {
-      border-radius: 8px; /* Redondea suavemente las esquinas de la imagen */
+      border-radius: 8px;
     }
 
     /* 🔹 PIE DE PÁGINA (FOOTER) */
     footer {
       width: 100%;
-      background-color: #003366; /* Azul oscuro igual al encabezado */
+      background-color: #003366;
       color: #ffffff;
       text-align: center;
       padding: 20px 10px;
@@ -190,38 +167,33 @@
     footer p {
       margin: 2px 0;
     }
-
   </style>
 </head>
 <body>
 
   <div class="main-wrapper">
     
-    <!-- TARJETA DE REGISTRO -->
+    <!-- TARJETA DE LOGIN -->
     <div class="section-card login-card">
-      <div class="header">REGISTRO AKROCEVER</div>
+      <div class="header">OFICINA VIRTUAL</div>
       <div class="login-body">
-        <form id="form-registro">
-          <label>Correo Electrónico</label>
-          <input type="email" id="reg-email" placeholder="usuario@correo.com" required>
+        <form id="form-login">
+          <label for="email">Correo Electrónico</label>
+          <input type="email" id="email" required placeholder="usuario@correo.com">
 
-          <label>Contraseña</label>
-          <input type="password" id="reg-password" placeholder="••••••••" required minlength="6">
+          <label for="password">Contraseña</label>
+          <input type="password" id="password" required placeholder="••••••••">
 
-          <button type="submit" id="btn-registrar">Crear Cuenta</button>
+          <button type="submit" id="btn-submit">Acceder</button>
         </form>
 
-        <div id="mensaje-estado" class="mensaje"></div>
-
-        <div class="login-link">
-          ¿Ya tienes una cuenta? <a href="0Kl.html">Inicia sesión aquí</a>
-        </div>
+        <div id="mensaje-estado"></div>
       </div>
     </div>
 
     <hr class="separador">
 
-    <!-- IMAGEN DEBAJO DEL REGISTRO -->
+    <!-- IMAGEN DEBAJO DEL LOGIN -->
     <div class="image-container">
       <img src="https://i.ibb.co/hRdrqtfh/Picsart-26-05-30-20-21-36-686.jpg" alt="Imagen descriptiva">
     </div>
@@ -234,50 +206,75 @@
     <p>Todos los derechos reservados.</p>
   </footer>
 
+  <!-- LÓGICA CONEXIÓN CON SUPABASE -->
   <script>
-    // Configuración de Supabase
     const SUPABASE_URL = 'https://atiihfgjbpvtjglestyw.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_CpzuF8Op8fYh_9znf-tHXg_Ba9xNMnP';
-    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    
+    // Conexión oficial a Supabase
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    const formRegistro = document.getElementById('form-registro');
+    const formLogin = document.getElementById('form-login');
     const mensajeEstado = document.getElementById('mensaje-estado');
-    const btnRegistrar = document.getElementById('btn-registrar');
+    const btnSubmit = document.getElementById('btn-submit');
+    const PAGINA_DEFECTO = 'https://akrocever.github.io/Sistema/Emp/0Encbzdo.html';
 
-    formRegistro.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      const email = document.getElementById('reg-email').value;
-      const password = document.getElementById('reg-password').value;
-
-      btnRegistrar.disabled = true;
-      btnRegistrar.textContent = 'Registrando...';
-      ocultarMensaje();
-
-      // Registro en Supabase
-      const { data, error } = await supabase.auth.signUp({ email, password });
-
-      btnRegistrar.disabled = false;
-      btnRegistrar.textContent = 'Crear Cuenta';
-
-      if (error) {
-        mostrarMensaje('Error: ' + error.message, false);
-      } else {
-        mostrarMensaje('¡Cuenta creada con éxito! Redirigiendo...', true);
-        setTimeout(() => {
-          window.location.href = '0Kl.html'; // Redirige a la página principal de inicio de sesión
-        }, 2000);
+    // Si el usuario ya había iniciado sesión, lo redirige directo
+    window.addEventListener('DOMContentLoaded', async () => {
+      const { data: { session } } = await supabaseClient.auth.getSession();
+      if (session) {
+        await redirigirUsuario(session.user.email);
       }
     });
 
-    function mostrarMensaje(texto, esExito) {
-      mensajeEstado.textContent = texto;
-      mensajeEstado.style.display = 'block';
-      if (esExito) {
-        mensajeEstado.className = 'mensaje mensaje-exito';
+    // Acción al presionar Acceder
+    formLogin.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      ocultarMensaje();
+
+      const email = document.getElementById('email').value.trim().toLowerCase();
+      const password = document.getElementById('password').value;
+
+      btnSubmit.disabled = true;
+      mostrarMensaje("Verificando datos...", "#ebf8ff", "#2b6cb0");
+
+      // 1. Iniciar sesión con Supabase Auth
+      const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+
+      if (error) {
+        btnSubmit.disabled = false;
+        mostrarMensaje("Error: " + error.message, "#fff5f5", "#c53030");
       } else {
-        mensajeEstado.className = 'mensaje mensaje-error';
+        await redirigirUsuario(data.user.email);
       }
+    });
+
+    // 2. Buscar URL en la tabla usuarios_paginas y redirigir
+    async function redirigirUsuario(email) {
+      mostrarMensaje("Cargando tu oficina...", "#ebf8ff", "#2b6cb0");
+
+      const emailLimpio = email.trim().toLowerCase();
+
+      const { data, error } = await supabaseClient
+        .from('usuarios_paginas')
+        .select('pagina_privada')
+        .eq('email', emailLimpio)
+        .maybeSingle();
+
+      if (error) {
+        console.error("Error al consultar Supabase:", error);
+      }
+
+      // Si encuentra la página en la tabla se va ahí, si no, a la por defecto
+      const urlFinal = data?.pagina_privada || PAGINA_DEFECTO;
+      window.location.href = urlFinal;
+    }
+
+    function mostrarMensaje(texto, bgColor, textColor) {
+      mensajeEstado.textContent = texto;
+      mensajeEstado.style.backgroundColor = bgColor;
+      mensajeEstado.style.color = textColor;
+      mensajeEstado.style.display = 'block';
     }
 
     function ocultarMensaje() {
