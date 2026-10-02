@@ -28,26 +28,38 @@
         // Inicializar cliente de Supabase
         const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-        // Si ya hay una sesión activa en Supabase, redirigir automáticamente
-        async function redirigirSiYaInicioSesion() {
-            const { data: { session } } = await supabase.auth.getSession();
-            if (session) {
-                obtenerYRedirigir(session.user.email);
-            }
-        }
-
         // Buscar la URL privada en la tabla de Supabase y redirigir
         async function obtenerYRedirigir(email) {
             const { data, error } = await supabase
                 .from('usuarios_paginas')
                 .select('pagina_privada')
                 .eq('email', email)
-                .single();
+                .maybeSingle();
 
-            if (data && data.pagina_privada) {
-                window.location.href = data.pagina_privada;
-            } else {
-                alert('No se encontró una página asignada para este usuario.');
+            if (error) {
+                alert('Error de Supabase: ' + error.message);
+                return;
+            }
+
+            if (!data) {
+                alert('No se encontró ninguna página asignada para el correo: ' + email);
+                return;
+            }
+
+            if (!data.pagina_privada) {
+                alert('La casilla "pagina_privada" está vacía en la base de datos.');
+                return;
+            }
+
+            // Redirigir a la URL privada del usuario
+            window.location.href = data.pagina_privada;
+        }
+
+        // Si ya hay una sesión activa, redirigir automáticamente
+        async function redirigirSiYaInicioSesion() {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session && session.user && session.user.email) {
+                await obtenerYRedirigir(session.user.email);
             }
         }
 
@@ -55,7 +67,7 @@
         async function manejarLogin(event) {
             event.preventDefault();
             
-            const email = document.getElementById('email').value;
+            const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
             const btnLogin = document.getElementById('btnLogin');
             const errorMsg = document.getElementById('errorMsg');
@@ -64,7 +76,7 @@
             btnLogin.innerText = 'Ingresando...';
             errorMsg.classList.add('hidden');
 
-            // Iniciar sesión en Supabase
+            // 1. Iniciar sesión en Supabase
             const { data, error } = await supabase.auth.signInWithPassword({
                 email: email,
                 password: password
@@ -76,6 +88,7 @@
                 btnLogin.disabled = false;
                 btnLogin.innerText = 'Iniciar Sesión';
             } else {
+                // 2. Redirigir a la página privada del usuario
                 await obtenerYRedirigir(email);
             }
         }
