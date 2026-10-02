@@ -3,10 +3,55 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Subpágina Privada - Inversiones</title>
   
+  <!-- Fuentes -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Supabase JS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Script de Validación de Sesión y Protección -->
+  <script>
+    const supabaseUrl = 'https://atiihfgjbpvtjglestyw.supabase.co'; 
+    const supabaseKey = 'sb_publishable_CpzuF8Op8fYh_9znf-tHXg_Ba9xNMnP'; 
+    const URL_LOGIN   = 'https://akrocever.github.io/user/login.html';
+
+    async function protegerSubpagina() {
+      // 1. Evitar que la subpágina se abra fuera del iframe
+      if (window === window.top) {
+        window.location.href = URL_LOGIN;
+        return;
+      }
+
+      // 2. Verificar que la librería de Supabase esté disponible
+      if (!window.supabase || !window.supabase.createClient) {
+        window.location.href = URL_LOGIN;
+        return;
+      }
+
+      const clientSupabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+      try {
+        const { data: { session }, error } = await clientSupabase.auth.getSession();
+
+        if (error || !session) {
+          // Si no hay sesión de Supabase iniciada, enviar a Login
+          window.location.href = URL_LOGIN;
+        } else {
+          // Si el usuario está autenticado, mostrar el contenido
+          document.body.style.display = 'block';
+        }
+      } catch (err) {
+        console.error('Error al validar sesión:', err);
+        window.location.href = URL_LOGIN;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', protegerSubpagina);
+  </script>
 
   <style>
     * {
@@ -17,14 +62,14 @@
       -moz-osx-font-smoothing: grayscale;
     }
 
-body {
-  background: #ffffff;
-  color: #1e293b;
-  min-height: 100vh;
-  padding: 16px;
-  font-family: 'Orbitron', sans-serif;
-  overflow-x: hidden;
-}
+    body {
+      background: #ffffff;
+      color: #1e293b;
+      min-height: 100vh;
+      padding: 16px;
+      font-family: 'Orbitron', sans-serif;
+      overflow-x: hidden;
+    }
 
     .container {
       max-width: 1400px;
@@ -181,182 +226,177 @@ body {
       --turquesa: #2ccccc;
     }
 
-.investment-card {
-  max-width: 360px;
-  margin: 0 auto 40px;
-  padding: 14px;
-  background: white;
-  border-radius: 10px;                    
-  box-shadow: 
-    0 0 0 4px #3e8fb8,                    
-    0 0 10px 4px rgba(62, 143, 184, 0.4), 
-    0 0 24px 8px rgba(62, 143, 184, 0.25),
-    0 8px 16px rgba(0,0,0,0.08);          
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
+    .investment-card {
+      max-width: 360px;
+      margin: 0 auto 40px;
+      padding: 14px;
+      background: white;
+      border-radius: 10px;                    
+      box-shadow: 
+        0 0 0 4px #3e8fb8,                    
+        0 0 10px 4px rgba(62, 143, 184, 0.4), 
+        0 0 24px 8px rgba(62, 143, 184, 0.25),
+        0 8px 16px rgba(0,0,0,0.08);          
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
 
-.investment-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 
-    0 0 0 5px #3e8fb8,
-    0 0 15px 6px rgba(62, 143, 184, 0.55),
-    0 0 30px 10px rgba(62, 143, 184, 0.35),
-    0 12px 24px rgba(0,0,0,0.12);
-}
+    .investment-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 
+        0 0 0 5px #3e8fb8,
+        0 0 15px 6px rgba(62, 143, 184, 0.55),
+        0 0 30px 10px rgba(62, 143, 184, 0.35),
+        0 12px 24px rgba(0,0,0,0.12);
+    }
 
-.card-container {
-  font-family: 'Orbitron', sans-serif;
-  padding: 16px;
-  max-width: 360px;
-  margin: 0 auto 48px;
-  background: transparent;
-  color: #000;
-  border-radius: 10px;
-  box-shadow: 
-    0 0 0 4px #3e8fb8,
-    0 0 10px 4px rgba(62, 143, 184, 0.4),
-    0 0 24px 8px rgba(62, 143, 184, 0.25);
-}
+    .card-container {
+      font-family: 'Orbitron', sans-serif;
+      padding: 16px;
+      max-width: 360px;
+      margin: 0 auto 48px;
+      background: transparent;
+      color: #000;
+      border-radius: 10px;
+      box-shadow: 
+        0 0 0 4px #3e8fb8,
+        0 0 10px 4px rgba(62, 143, 184, 0.4),
+        0 0 24px 8px rgba(62, 143, 184, 0.25);
+    }
 
-.section {
-  border: 2px solid #3b8fc4;
-  padding: 20px 12px;
-  margin-bottom: 16px;
-  text-align: center;
-  border-radius: 8px;
-  background: rgba(255,255,255,0.85);
-}
+    .section {
+      border: 2px solid #3b8fc4;
+      padding: 20px 12px;
+      margin-bottom: 16px;
+      text-align: center;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.85);
+    }
 
-.title {
-  font-size: 14px;
-  font-weight: 800;
-  color: #ffffff;
-  background-color: #3b8fc4;
-  padding: 8px;
-  margin: -20px -12px 14px -12px;
-  border-radius: 6px 6px 0 0;
-}
+    .title {
+      font-size: 14px;
+      font-weight: 800;
+      color: #ffffff;
+      background-color: #3b8fc4;
+      padding: 8px;
+      margin: -20px -12px 14px -12px;
+      border-radius: 6px 6px 0 0;
+    }
 
-.amount {
-  font-size: 24px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-}
+    .amount {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
 
-.currency {
-  font-size: 15px;
-  font-weight: 600;
-  margin-left: 6px;
-  color: #555;
-}
+    .currency {
+      font-size: 15px;
+      font-weight: 600;
+      margin-left: 6px;
+      color: #555;
+    }
 
-.completed-section {
-  margin-top: 48px; 
-  text-align: center;
-}
+    .completed-section {
+      margin-top: 48px; 
+      text-align: center;
+    }
 
-.completed-section .section-title {
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: 1.0px;
-  color: #1e293b;
-  margin-bottom: 24px;
-  text-transform: uppercase;
-}
+    .completed-section .section-title {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 1.0px;
+      color: #1e293b;
+      margin-bottom: 24px;
+      text-transform: uppercase;
+    }
 
-.completed-container {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 0 10px;
-}
+    .completed-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 10px;
+    }
 
-.completed-card {
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 
-    0 0 0 4px #3f8fb8,
-    0 0 5px 4px rgba(63, 143, 184, 0.3),
-    0 0 24px 8px rgba(63, 143, 184, 0.2);
-  background: white;
-}
+    .completed-card {
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 
+        0 0 0 4px #3f8fb8,
+        0 0 5px 4px rgba(63, 143, 184, 0.3),
+        0 0 24px 8px rgba(63, 143, 184, 0.2);
+      background: white;
+    }
 
-.completed-header {
-  background: #3f8fb8;
-  color: white;
-  text-align: center;
-  padding: 16px;
-  font-family: 'Orbitron', sans-serif;
-  font-size: 17px;
-  font-weight: 800;
-  letter-spacing: 1px;
-  position: relative;
-  overflow: hidden;
-}
+    .completed-header {
+      background: #3f8fb8;
+      color: white;
+      text-align: center;
+      padding: 16px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      position: relative;
+      overflow: hidden;
+    }
 
-.completed-header::before {
-  content: '';
-  position: absolute;
-  inset: -50% -120% -50% -120%;
-  background: linear-gradient(
-    90deg,
-    transparent 20%,
-    rgba(255, 255, 255, 0.45) 45%,
-    rgba(255, 255, 255, 0.25) 50%,
-    transparent 80%
-  );
-  animation: shineHorizontal 5.5s linear infinite;   
-  pointer-events: none;
-  transform: skewX(-15deg);
-}
+    .completed-header::before {
+      content: '';
+      position: absolute;
+      inset: -50% -120% -50% -120%;
+      background: linear-gradient(
+        90deg,
+        transparent 20%,
+        rgba(255, 255, 255, 0.45) 45%,
+        rgba(255, 255, 255, 0.25) 50%,
+        transparent 80%
+      );
+      animation: shineHorizontal 5.5s linear infinite;   
+      pointer-events: none;
+      transform: skewX(-15deg);
+    }
 
-.completed-table {
-  width: 100%;
-  border-collapse: collapse;
-}
+    .completed-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
 
-.completed-table thead th {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 16px;
-  padding: 14px 8px;
-  background: #f0f7fa;
-  color: #1e293b;
-  text-align: center;
-  border-bottom: 2px solid #3f8fb8;
-}
+    .completed-table thead th {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 16px;
+      padding: 14px 8px;
+      background: #f0f7fa;
+      color: #1e293b;
+      text-align: center;
+      border-bottom: 2px solid #3f8fb8;
+    }
 
-.completed-table tbody td {
-  padding: 16px 8px;
-  font-size: 15px;
-  color: #444;
-  text-align: center;
-  border-bottom: 1px solid rgba(0,0,0,0.08);
-  font-family: 'Lexend', sans-serif;
-}
+    .completed-table tbody td {
+      padding: 16px 8px;
+      font-size: 15px;
+      color: #444;
+      text-align: center;
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+      font-family: 'Lexend', sans-serif;
+    }
 
-.completed-table tbody tr:last-child td {
-  border-bottom: none;
-}
+    .completed-table tbody tr:last-child td {
+      border-bottom: none;
+    }
 
-@media (max-width: 768px) {
-  .completed-table thead th,
-  .completed-table tbody td {
-    font-size: 14px;
-    padding: 12px 6px;
-  }
-}
+    @media (max-width: 768px) {
+      .completed-table thead th,
+      .completed-table tbody td {
+        font-size: 14px;
+        padding: 12px 6px;
+      }
+    }
 
-.completed-card {
-  margin-bottom: 45px;   
-}
+    .completed-card {
+      margin-bottom: 45px;   
+    }
 
-.completed-card:last-child {
-  margin-bottom: 0;      
-}
-
-@keyframes shineHorizontal {
-  0%   { transform: translateX(-180%) skewX(-15deg); }
-  100% { transform: translateX(180%)  skewX(-15deg); }
-}
+    .completed-card:last-child {
+      margin-bottom: 0;      
+    }
 
     .investment-header {
       background: var(--color-header);
@@ -414,9 +454,6 @@ body {
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* ============================= */
-    /* ✅ FIX PARA QUE NO SE CORRA */
-    /* ============================= */
     html, body {
       width: 100%;
       overflow-x: hidden;
@@ -437,7 +474,9 @@ body {
     }
   </style>
 </head>
-<body>
+
+<!-- El cuerpo inicia oculto para evitar mostrar información antes de validar la sesión -->
+<body style="display: none;">
 
 <div class="container">
 
@@ -653,7 +692,7 @@ document.getElementById("progressDot").style.left = porcentaje + "%";
   text-align: center;
   padding: 20px 16px;
   margin-top: 60px;
-  font-family: 'lexend', sans-serif;
+  font-family: 'Lexend', sans-serif;
   font-size: 12px;
   letter-spacing: 0.5px;
   position: relative;
@@ -677,4 +716,4 @@ document.getElementById("progressDot").style.left = porcentaje + "%";
 </footer>
 
 </body>
-            </html>
+</html>
