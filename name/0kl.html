@@ -84,14 +84,14 @@
         </header>
 
         <main class="flex-grow w-full h-[calc(100vh-60px)] overflow-hidden">
-            <iframe name="contenedor-virtual" src="https://akrocever.github.io/Sistema/Emp/0Encbzdo.html" class="w-full h-full border-none" title="Contenido de Oficina Virtual"></iframe>
+            <iframe id="iframe-privado" name="contenedor-virtual" src="" class="w-full h-full border-none" title="Contenido de Oficina Virtual"></iframe>
         </main>
 
     </div>
 
 
     <!-- =================================================== -->
-    <!-- 3. LÓGICA DE AUTENTICACIÓN                         -->
+    <!-- 3. LÓGICA DE AUTENTICACIÓN Y REDIRECCIÓN            -->
     <!-- =================================================== -->
     <script>
         const SUPABASE_URL = 'https://atiihfgjbpvtjglestyw.supabase.co';
@@ -103,11 +103,19 @@
         const formLogin = document.getElementById('form-login');
         const mensajeEstado = document.getElementById('mensaje-estado');
         const btnSubmit = document.getElementById('btn-submit');
+        const iframePrivado = document.getElementById('iframe-privado');
+
+        // Página por defecto por si el usuario no tiene una asignada
+        const PAGINA_DEFECTO = 'https://akrocever.github.io/Sistema/Emp/0Encbzdo.html';
 
         // Verificar sesión activa al entrar
         window.addEventListener('DOMContentLoaded', async () => {
             const { data: { session } } = await supabase.auth.getSession();
-            mostrarVista(session);
+            if (session) {
+                await cargarPaginaUsuario(session.user.email);
+            } else {
+                mostrarVista(null);
+            }
         });
 
         // Evento Iniciar Sesión
@@ -128,18 +136,34 @@
             if (error) {
                 mostrarMensaje("Error: " + error.message, "bg-red-100 text-red-700");
             } else {
-                mostrarVista(data.session);
+                await cargarPaginaUsuario(data.user.email);
             }
         });
+
+        // Consultar la tabla de páginas privadas
+        async function cargarPaginaUsuario(email) {
+            mostrarMensaje("Cargando tu sesión...", "bg-blue-100 text-blue-700");
+
+            const { data, error } = await supabase
+                .from('usuarios_paginas')
+                .select('pagina_privada')
+                .eq('email', email)
+                .maybeSingle();
+
+            const urlFinal = data?.pagina_privada || PAGINA_DEFECTO;
+            iframePrivado.src = urlFinal;
+            mostrarVista(true);
+        }
 
         // Evento Cerrar Sesión
         document.getElementById('btn-logout').addEventListener('click', async () => {
             await supabase.auth.signOut();
+            iframePrivado.src = "";
             mostrarVista(null);
         });
 
-        function mostrarVista(session) {
-            if (session) {
+        function mostrarVista(autenticado) {
+            if (autenticado) {
                 seccionLogin.classList.add('hidden');
                 contenidoProtegido.classList.remove('hidden');
                 contenidoProtegido.classList.add('flex');
