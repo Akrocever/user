@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar Sesión - Oficina Virtual</title>
+    <title>Oficina Virtual</title>
     
     <!-- Librerías de Estilo e Iconos -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
@@ -21,120 +21,85 @@
     </style>
 
     <script>
-        // Configuración de Supabase
+        // Configuración de Supabase (URL ajustada sin /rest/v1/)
         const supabaseUrl = 'https://atiihfgjbpvtjglestyw.supabase.co'; 
         const supabaseKey = 'sb_publishable_CpzuF8Op8fYh_9znf-tHXg_Ba9xNMnP'; 
+        const URL_LOGIN   = 'https://akrocever.github.io/user/login.html';
 
         // Inicializar cliente de Supabase
         const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-        // Si ya hay una sesión activa, redirigir automáticamente
-        async function redirigirSiYaInicioSesion() {
-            const { data: { session } } = await supabase.auth.getSession();
-            if (session) {
-                obtenerYRedirigir(session.user.email);
+        // 1. Proteger la página (verificar si existe sesión)
+        async function protegerPagina() {
+            try {
+                const { data: { session }, error } = await supabase.auth.getSession();
+                
+                if (error || !session) {
+                    // Si no hay sesión o hubo un error, redirige al login
+                    window.location.href = URL_LOGIN;
+                } else {
+                    // Si existe sesión, se muestra el contenido de la página
+                    document.body.style.display = 'flex';
+                }
+            } catch (err) {
+                console.error('Error al verificar sesión:', err);
+                window.location.href = URL_LOGIN;
             }
         }
 
-        // Buscar la URL privada en la tabla de Supabase y redirigir
-        async function obtenerYRedirigir(email) {
-            const { data, error } = await supabase
-                .from('usuarios_paginas')
-                .select('pagina_privada')
-                .eq('email', email)
-                .single();
-
-            if (data && data.pagina_privada) {
-                window.location.href = data.pagina_privada;
-            } else {
-                alert('No se encontró una página asignada para este usuario.');
+        // 2. Función para cerrar sesión
+        async function cerrarSesion() {
+            try {
+                const { error } = await supabase.auth.signOut();
+                if (error) {
+                    alert('Error al cerrar sesión: ' + error.message);
+                } else {
+                    // Redirige al login tras cerrar sesión exitosamente
+                    window.location.href = URL_LOGIN;
+                }
+            } catch (err) {
+                alert('Ocurrió un error al intentar cerrar sesión: ' + err.message);
             }
         }
 
-        // Función que procesa el formulario de login
-        async function manejarLogin(event) {
-            event.preventDefault();
-            
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const btnLogin = document.getElementById('btnLogin');
-            const errorMsg = document.getElementById('errorMsg');
-
-            btnLogin.disabled = true;
-            btnLogin.innerText = 'Ingresando...';
-            errorMsg.classList.add('hidden');
-
-            // 1. Iniciar sesión en Supabase
-            const { data, error } = await supabase.auth.signInWithPassword({
-                email: email,
-                password: password
-            });
-
-            if (error) {
-                errorMsg.innerText = 'Error: ' + error.message;
-                errorMsg.classList.remove('hidden');
-                btnLogin.disabled = false;
-                btnLogin.innerText = 'Iniciar Sesión';
-            } else {
-                // 2. Redirigir a la página privada del usuario
-                await obtenerYRedirigir(email);
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', redirigirSiYaInicioSesion);
+        // Ejecutar verificación tan pronto cargue el DOM
+        document.addEventListener('DOMContentLoaded', protegerPagina);
     </script>
 </head>
 
-<body class="bg-[#0f172a] min-h-screen flex items-center justify-center p-4 text-white">
+<!-- Se inicia oculto para evitar mostrar el contenido antes de autenticar -->
+<body class="bg-gray-100 min-h-screen flex flex-col pt-20" style="display: none;">
 
-    <div class="bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl p-6 md:p-8 w-full max-w-md">
-        
-        <!-- Encabezado / Logo -->
-        <div class="text-center mb-6">
-            <h1 class="text-2xl font-bold text-blue-400 tracking-wider mb-1" style="font-family: 'Orbitron', sans-serif;">
-                OFICINA VIRTUAL
-            </h1>
-            <p class="text-slate-400 text-sm">Ingresa tus credenciales para acceder</p>
+    <header class="bg-[#0f172a] text-white fixed top-0 left-0 right-0 h-20 shadow-xl z-50 px-4 md:px-8 flex items-center justify-between border-b border-slate-800">
+        <div class="flex items-center">
+            <span class="text-lg font-bold tracking-wider" style="font-family: 'Orbitron', sans-serif;">Hola, <span class="text-blue-400">Bienvenido/a</span></span>
         </div>
 
-        <!-- Formulario -->
-        <form onsubmit="manejarLogin(event)" class="space-y-4">
-            
-            <!-- Campo Correo -->
-            <div>
-                <label for="email" class="block text-xs font-semibold uppercase text-slate-300 mb-1">Correo Electrónico</label>
-                <div class="relative">
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500">
-                        <i class="fa-solid fa-envelope"></i>
-                    </span>
-                    <input type="email" id="email" required placeholder="tu@correo.com" 
-                           class="w-full pl-10 pr-4 py-2.5 bg-slate-800 border border-slate-700 rounded-xl focus:outline-none focus:border-blue-500 text-sm text-white placeholder-slate-500 transition-colors">
-                </div>
-            </div>
+        <nav class="flex items-center space-x-3 md:space-x-5">
+            <a href="https://akrocever.github.io/user/00Entrada/Einv.html" target="contenedor-virtual" 
+               class="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-full border border-slate-700 text-slate-300 hover:text-white hover:bg-slate-800 transition-all duration-150 ease-in-out group active:scale-90 active:bg-slate-700 focus:outline-none" 
+               title="Inversión">
+                <i class="fa-solid fa-chart-line text-base md:text-lg text-blue-400 group-hover:scale-110 transition-transform"></i>
+            </a>
 
-            <!-- Campo Contraseña -->
-            <div>
-                <label for="password" class="block text-xs font-semibold uppercase text-slate-300 mb-1">Contraseña</label>
-                <div class="relative">
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500">
-                        <i class="fa-solid fa-lock"></i>
-                    </span>
-                    <input type="password" id="password" required placeholder="••••••••" 
-                           class="w-full pl-10 pr-4 py-2.5 bg-slate-800 border border-slate-700 rounded-xl focus:outline-none focus:border-blue-500 text-sm text-white placeholder-slate-500 transition-colors">
-                </div>
-            </div>
+            <a href="https://akrocever.github.io/user/00Entrada/Gans.html" target="contenedor-virtual" 
+               class="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-full border border-slate-700 text-slate-300 hover:text-white hover:bg-slate-800 transition-all duration-150 ease-in-out group active:scale-90 active:bg-slate-700 focus:outline-none" 
+               title="Pagos">
+                <i class="fa-solid fa-credit-card text-base md:text-lg text-blue-400 group-hover:scale-110 transition-transform"></i>
+            </a>
 
-            <!-- Mensaje de Error -->
-            <div id="errorMsg" class="hidden text-red-400 text-xs bg-red-950/50 border border-red-900 p-2.5 rounded-lg text-center"></div>
-
-            <!-- Botón Ingresar -->
-            <button type="submit" id="btnLogin" 
-                    class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-xl shadow-lg shadow-blue-600/30 transition-all duration-200 cursor-pointer active:scale-95 text-sm">
-                Iniciar Sesión
+            <!-- Botón de Cerrar Sesión -->
+            <button onclick="cerrarSesion()" 
+                    class="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-full border border-red-900/50 text-red-400 hover:text-white hover:bg-red-600/20 transition-all duration-150 ease-in-out group active:scale-90 focus:outline-none cursor-pointer" 
+                    title="Cerrar Sesión">
+                <i class="fa-solid fa-right-from-bracket text-base md:text-lg group-hover:scale-110 transition-transform"></i>
             </button>
+        </nav>
+    </header>
 
-        </form>
-    </div>
+    <main class="flex-grow w-full h-[calc(100vh-5rem)] overflow-hidden">
+        <iframe name="contenedor-virtual" src="https://akrocever.github.io/user/Noticiask.html" class="w-full h-full border-none" title="Contenido de Oficina Virtual"></iframe>
+    </main>
 
 </body>
 </html>
