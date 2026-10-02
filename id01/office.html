@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oficina Virtual</title>
+    
+    <!-- Librerías de Estilo e Iconos -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Supabase JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        body { font-family: 'Lexend', sans-serif; }
+    </style>
+
+    <script>
+        // Configuración de Supabase
+        const supabaseUrl = 'https://atiihfgjbpvtjglestyw.supabase.co'; 
+        const supabaseKey = 'sb_publishable_CpzuF8Op8fYh_9znf-tHXg_Ba9xNMnP'; 
+        const URL_LOGIN   = 'https://akrocever.github.io/user/login.html';
+
+        let clientSupabase = null;
+
+        function initSupabase() {
+            if (window.supabase && window.supabase.createClient) {
+                clientSupabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+            }
+        }
+
+        // Proteger la página (verificar sesión activa)
+        async function protegerPagina() {
+            initSupabase();
+
+            if (!clientSupabase) {
+                document.body.style.display = 'flex';
+                return;
+            }
+
+            try {
+                const { data: { session }, error } = await clientSupabase.auth.getSession();
+                
+                if (error || !session) {
+                    // Si no hay sesión válida, redirigir al login
+                    window.location.href = URL_LOGIN;
+                } else {
+                    // Si la sesión existe, mostrar todo el contenido
+                    document.body.style.display = 'flex';
+                }
+            } catch (err) {
+                console.error('Error al verificar sesión:', err);
+                window.location.href = URL_LOGIN;
+            }
+        }
+
+        // Función para cerrar sesión
+        async function cerrarSesion() {
+            initSupabase();
+            if (clientSupabase) {
+                await clientSupabase.auth.signOut();
+            }
+            window.location.href = URL_LOGIN;
+        }
+
+        document.addEventListener('DOMContentLoaded', protegerPagina);
+    </script>
+</head>
+
+<body class="bg-gray-100 min-h-screen flex flex-col pt-20" style="display: none;">
+
+    <header class="bg-[#0f172a] text-white fixed top-0 left-0 right-0 h-20 shadow-xl z-50 px-4 md:px-8 flex items-center justify-between border-b border-slate-800">
+        <div class="flex items-center">
+            <span class="text-lg font-bold tracking-wider" style="font-family: 'Orbitron', sans-serif;">Bienvenida<span class="text-blue-400">(ID: 01) Rosa Linda</span></span>
+        </div>
+
+        <nav class="flex items-center space-x-3 md:space-x-5">
+            <a href="https://akrocever.github.io/user/01Lind/N-inv.html" target="contenedor-virtual" 
+               class="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-full border border-slate-700 text-slate-300 hover:text-white hover:bg-slate-800 transition-all duration-150 ease-in-out group active:scale-90 active:bg-slate-700 focus:outline-none" 
+               title="Inversión">
+                <i class="fa-solid fa-chart-line text-base md:text-lg text-blue-400 group-hover:scale-110 transition-transform"></i>
+            </a>
+
+            <a href="https://akrocever.github.io/user/01Lind/N-Gans.html" target="contenedor-virtual" 
+               class="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-full border border-slate-700 text-slate-300 hover:text-white hover:bg-slate-800 transition-all duration-150 ease-in-out group active:scale-90 active:bg-slate-700 focus:outline-none" 
+               title="Pagos">
+                <i class="fa-solid fa-credit-card text-base md:text-lg text-blue-400 group-hover:scale-110 transition-transform"></i>
+            </a>
+
+            <!-- Botón de Cerrar Sesión -->
+            <button onclick="cerrarSesion()" 
+                    class="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-full border border-red-900/50 text-red-400 hover:text-white hover:bg-red-600/20 transition-all duration-150 ease-in-out group active:scale-90 focus:outline-none cursor-pointer" 
+                    title="Cerrar Sesión">
+                <i class="fa-solid fa-right-from-bracket text-base md:text-lg group-hover:scale-110 transition-transform"></i>
+            </button>
+        </nav>
+    </header>
+
+    <main class="flex-grow w-full h-[calc(100vh-5rem)] overflow-hidden">
+        <iframe name="contenedor-virtual" src="https://akrocever.github.io/user/Noticiask.html" class="w-full h-full border-none" title="Contenido de Oficina Virtual"></iframe>
+    </main>
+
+</body>
+</html>
