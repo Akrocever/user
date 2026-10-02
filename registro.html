@@ -133,6 +133,12 @@
     .submit-btn:active {
       transform: translateY(0);
     }
+
+    .submit-btn:disabled {
+      background: #334155;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
   </style>
 </head>
 <body>
@@ -183,58 +189,76 @@
     </form>
   </div>
 
-  <!-- CDN Supabase JS -->
+  <!-- CDN Supabase JS v2 -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    // Credenciales de tu proyecto Supabase
+    // Credenciales del proyecto Supabase
     const SUPABASE_URL = 'https://atiihfgjbpvtjglestyw.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_CpzuF8Op8fYh_9znf-tHXg_Ba9xNMnP';
     
-    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    // Inicialización del cliente Supabase desde window
+    const { createClient } = window.supabase;
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     const form = document.getElementById('registroForm');
+    const submitBtn = form.querySelector('.submit-btn');
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
+
+      // Cambiar estado del botón mientras procesa
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Registrando...';
 
       const nombre = document.getElementById('nombre').value;
       const apellido = document.getElementById('apellido').value;
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
 
-      // 1. Registro en Supabase Auth
-      const { data: authData, error: authError } = await supabase.auth.signUp({
-        email: email,
-        password: password,
-        options: {
-          data: {
-            nombre: nombre,
-            apellido: apellido
+      try {
+        // 1. Registro en Supabase Auth
+        const { data: authData, error: authError } = await supabase.auth.signUp({
+          email: email,
+          password: password,
+          options: {
+            data: {
+              nombre: nombre,
+              apellido: apellido
+            }
           }
+        });
+
+        if (authError) {
+          alert('Error en el registro: ' + authError.message);
+          return;
         }
-      });
 
-      if (authError) {
-        alert('Error en el registro: ' + authError.message);
-        return;
+        // 2. Registro en la tabla usuarios_paginas
+        const userId = authData?.user?.id || 'nuevo-usuario';
+        const { error: dbError } = await supabase
+          .from('usuarios_paginas')
+          .insert([
+            { 
+              email: email,
+              pagina_privada: `https://akrocever.github.io/user/${userId}`
+            }
+          ]);
+
+        if (dbError) {
+          console.error('Error al guardar en tabla:', dbError.message);
+        }
+
+        alert('¡Cuenta creada con éxito!');
+        form.reset();
+
+      } catch (err) {
+        alert('Ocurrió un error inesperado: ' + err.message);
+        console.error(err);
+      } finally {
+        // Restaurar estado del botón
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Crear Cuenta';
       }
-
-      // 2. Registro en tu tabla custom usuarios_paginas
-      const { data, error: dbError } = await supabase
-        .from('usuarios_paginas')
-        .insert([
-          { 
-            email: email,
-            pagina_privada: `https://akrocever.github.io/user/${authData.user.id}`
-          }
-        ]);
-
-      if (dbError) {
-        console.error('Error al guardar en tabla:', dbError.message);
-      }
-
-      alert('¡Cuenta creada con éxito!');
-      form.reset();
     });
   </script>
 </body>
