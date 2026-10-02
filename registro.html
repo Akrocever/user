@@ -56,7 +56,7 @@
       font-weight: 300;
     }
 
-    /* Mensaje de estado en pantalla */
+    /* Mensaje de estado */
     .status-msg {
       padding: 12px;
       border-radius: 10px;
@@ -163,7 +163,6 @@
     <h1 class="header-title">REGISTRO</h1>
     <p class="header-subtitle">Completa tus datos para registrarte</p>
 
-    <!-- Contenedor para ver los mensajes de error/éxito directamente en pantalla -->
     <div id="statusMsg" class="status-msg"></div>
 
     <form id="registroForm">
@@ -206,8 +205,8 @@
   <!-- CDN Supabase JS v2 -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    // URL corregida con 'atilhfgbpvtjglestyw'
-    const SUPABASE_URL = 'https://atiihfgjbpvtjglestyw.supabase.co/rest/v1/';
+    // URL limpia sin barras ni prefijos extra al final
+    const SUPABASE_URL = 'https://atiihfgjbpvtjglestyw.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_CpzuF8Op8fYh_9znf-tHXg_Ba9xNMnP';
     
     let supabaseClient;
@@ -220,7 +219,6 @@
       statusMsg.className = 'status-msg ' + (isError ? 'error' : 'success');
     }
 
-    // Inicializar cliente
     try {
       if (window.supabase) {
         supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -228,12 +226,12 @@
         showStatus('Error: No se pudo cargar la librería de Supabase.');
       }
     } catch (err) {
-      showStatus('Error al conectar con Supabase: ' + err.message);
+      showStatus('Error de cliente: ' + err.message);
     }
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      statusMsg.className = 'status-msg'; // Limpiar mensaje previo
+      statusMsg.className = 'status-msg';
 
       if (!supabaseClient) {
         showStatus('Cliente Supabase no inicializado.');
@@ -266,7 +264,7 @@
           return;
         }
 
-        // 2. Registro en tabla usuarios_paginas
+        // 2. Registro en la tabla usuarios_paginas
         const userId = authData?.user?.id || 'nuevo-usuario';
         const { error: dbError } = await supabaseClient
           .from('usuarios_paginas')
