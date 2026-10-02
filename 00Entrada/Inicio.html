@@ -21,7 +21,7 @@
     </style>
 
     <script>
-        // Configuración de Supabase (URL ajustada sin /rest/v1/)
+        // Configuración de Supabase
         const supabaseUrl = 'https://atiihfgjbpvtjglestyw.supabase.co'; 
         const supabaseKey = 'sb_publishable_CpzuF8Op8fYh_9znf-tHXg_Ba9xNMnP'; 
         const URL_LOGIN   = 'https://akrocever.github.io/user/login.html';
@@ -29,16 +29,16 @@
         // Inicializar cliente de Supabase
         const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-        // 1. Proteger la página (verificar si existe sesión)
+        // 1. Proteger la página (verificar si existe sesión en Supabase)
         async function protegerPagina() {
             try {
                 const { data: { session }, error } = await supabase.auth.getSession();
                 
                 if (error || !session) {
-                    // Si no hay sesión o hubo un error, redirige al login
+                    // Si no hay sesión o hay error, manda al login
                     window.location.href = URL_LOGIN;
                 } else {
-                    // Si existe sesión, se muestra el contenido de la página
+                    // Si la sesión existe, muestra la interfaz
                     document.body.style.display = 'flex';
                 }
             } catch (err) {
@@ -47,14 +47,14 @@
             }
         }
 
-        // 2. Función para cerrar sesión
+        // 2. Función para cerrar sesión en Supabase
         async function cerrarSesion() {
             try {
                 const { error } = await supabase.auth.signOut();
                 if (error) {
                     alert('Error al cerrar sesión: ' + error.message);
                 } else {
-                    // Redirige al login tras cerrar sesión exitosamente
+                    // Limpia la pantalla y manda directamente al login
                     window.location.href = URL_LOGIN;
                 }
             } catch (err) {
@@ -62,12 +62,12 @@
             }
         }
 
-        // Ejecutar verificación tan pronto cargue el DOM
+        // Ejecutar verificación tan pronto cargue la página
         document.addEventListener('DOMContentLoaded', protegerPagina);
     </script>
 </head>
 
-<!-- Se inicia oculto para evitar mostrar el contenido antes de autenticar -->
+<!-- Inicia oculto para evitar parpadeos antes de validar la sesión -->
 <body class="bg-gray-100 min-h-screen flex flex-col pt-20" style="display: none;">
 
     <header class="bg-[#0f172a] text-white fixed top-0 left-0 right-0 h-20 shadow-xl z-50 px-4 md:px-8 flex items-center justify-between border-b border-slate-800">
@@ -88,7 +88,7 @@
                 <i class="fa-solid fa-credit-card text-base md:text-lg text-blue-400 group-hover:scale-110 transition-transform"></i>
             </a>
 
-            <!-- Botón de Cerrar Sesión -->
+            <!-- Botón de Cerrar Sesión con Supabase -->
             <button onclick="cerrarSesion()" 
                     class="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-full border border-red-900/50 text-red-400 hover:text-white hover:bg-red-600/20 transition-all duration-150 ease-in-out group active:scale-90 focus:outline-none cursor-pointer" 
                     title="Cerrar Sesión">
