@@ -44,7 +44,7 @@
             }
 
             try {
-                // 1. Verificar si hay sesión
+                // 1. Verificar si hay una sesión activa en Supabase Auth
                 const { data: { session }, error } = await clientSupabase.auth.getSession();
                 
                 if (error || !session) {
@@ -52,33 +52,37 @@
                     return;
                 }
 
-                // 2. Consultar en la tabla de Supabase la información del usuario logueado
+                // 2. Consultar la tabla para obtener la carpeta asignada al correo logueado
                 const { data: usuarioData, error: dbError } = await clientSupabase
                     .from('usuarios_paginas')
-                    .select('email, pagina_privada') // Asegúrate de que 'pagina_privada' guarda valores como 'id01', 'id02', etc.
-                    .single();
+                    .select('pagina_privada')
+                    .eq('email', session.user.email)
+                    .maybeSingle();
 
-                // Si hay error en la consulta RLS o no trae datos
+                // Si no hay datos o falla RLS, cerramos sesión para evitar bucles
                 if (dbError || !usuarioData) {
-                    console.error('Error o sin permisos RLS:', dbError);
+                    console.error('Error al consultar datos:', dbError);
+                    alert("No se encontraron permisos para esta cuenta.");
+                    await clientSupabase.auth.signOut();
                     window.location.href = URL_LOGIN;
                     return;
                 }
 
-                // 3. Validar si la URL actual corresponde a la ruta permitida del usuario
+                const carpetaAsignada = usuarioData.pagina_privada; // Ej: "id", "id01", "id02"
                 const urlActual = window.location.pathname;
 
-                if (!urlActual.includes(`/user/${usuarioData.pagina_privada}/`)) {
-                    alert("No tienes permiso para acceder a este panel de usuario.");
-                    window.location.href = `https://akrocever.github.io/user/${usuarioData.pagina_privada}/office.html`;
+                // 3. Validar si el usuario está intentando ver la carpeta de ALGUIEN MÁS
+                if (carpetaAsignada && !urlActual.includes(`/${carpetaAsignada}/`)) {
+                    alert("No tienes permiso para acceder a esta cuenta. Redirigiéndote a tu panel...");
+                    window.location.href = `https://akrocever.github.io/user/${carpetaAsignada}/office.html`;
                     return;
                 }
 
-                // Si todas las verificaciones pasan, mostrar el contenido de la página
+                // Si la URL coincide con su carpeta asignada, mostramos la página
                 document.body.style.display = 'flex';
 
             } catch (err) {
-                console.error('Error general al verificar sesión:', err);
+                console.error('Error al verificar sesión:', err);
                 window.location.href = URL_LOGIN;
             }
         }
