@@ -22,13 +22,13 @@
     async function protegerSubpagina() {
       // 1. Evitar que la subpágina se abra fuera del iframe
       if (window === window.top) {
-        window.location.href = URL_LOGIN;
+        window.top.location.href = URL_LOGIN;
         return;
       }
 
       // 2. Verificar que la librería de Supabase esté disponible
       if (!window.supabase || !window.supabase.createClient) {
-        window.location.href = URL_LOGIN;
+        window.top.location.href = URL_LOGIN;
         return;
       }
 
@@ -38,15 +38,15 @@
         const { data: { session }, error } = await clientSupabase.auth.getSession();
 
         if (error || !session) {
-          // Si no hay sesión de Supabase iniciada, enviar a Login
-          window.location.href = URL_LOGIN;
+          // Si no hay sesión de Supabase iniciada, enviar a Login fuera del iframe
+          window.top.location.href = URL_LOGIN;
         } else {
           // Si el usuario está autenticado, mostrar el contenido
           document.body.style.display = 'block';
         }
       } catch (err) {
         console.error('Error al validar sesión:', err);
-        window.location.href = URL_LOGIN;
+        window.top.location.href = URL_LOGIN;
       }
     }
 
