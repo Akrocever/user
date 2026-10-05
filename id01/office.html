@@ -34,27 +34,51 @@
             }
         }
 
-        // Proteger la página (verificar sesión activa)
+        // Proteger la página (verificar sesión activa y validar carpeta asignada)
         async function protegerPagina() {
             initSupabase();
 
             if (!clientSupabase) {
-                document.body.style.display = 'flex';
+                window.location.href = URL_LOGIN;
                 return;
             }
 
             try {
+                // 1. Verificar si hay sesión
                 const { data: { session }, error } = await clientSupabase.auth.getSession();
                 
                 if (error || !session) {
-                    // Si no hay sesión válida, redirigir al login
                     window.location.href = URL_LOGIN;
-                } else {
-                    // Si la sesión existe, mostrar todo el contenido
-                    document.body.style.display = 'flex';
+                    return;
                 }
+
+                // 2. Consultar en la tabla de Supabase la información del usuario logueado
+                const { data: usuarioData, error: dbError } = await clientSupabase
+                    .from('usuarios_paginas')
+                    .select('email, pagina_privada') // Asegúrate de que 'pagina_privada' guarda valores como 'id01', 'id02', etc.
+                    .single();
+
+                // Si hay error en la consulta RLS o no trae datos
+                if (dbError || !usuarioData) {
+                    console.error('Error o sin permisos RLS:', dbError);
+                    window.location.href = URL_LOGIN;
+                    return;
+                }
+
+                // 3. Validar si la URL actual corresponde a la ruta permitida del usuario
+                const urlActual = window.location.pathname;
+
+                if (!urlActual.includes(`/user/${usuarioData.pagina_privada}/`)) {
+                    alert("No tienes permiso para acceder a este panel de usuario.");
+                    window.location.href = `https://akrocever.github.io/user/${usuarioData.pagina_privada}/office.html`;
+                    return;
+                }
+
+                // Si todas las verificaciones pasan, mostrar el contenido de la página
+                document.body.style.display = 'flex';
+
             } catch (err) {
-                console.error('Error al verificar sesión:', err);
+                console.error('Error general al verificar sesión:', err);
                 window.location.href = URL_LOGIN;
             }
         }
@@ -76,18 +100,14 @@
 
     <header class="bg-[#0f172a] text-white fixed top-0 left-0 right-0 h-15 shadow-xl z-50 px-4 md:px-8 flex items-center justify-between border-b border-slate-800">
         <div class="flex flex-col justify-center">
-    <!-- Primera línea: ID y ¡Bienvenida! -->
-    <div class="flex items-center gap-2">
-        <!-- "ID 01" en fuente Orbitron, azul claro y tamaño reducido (text-sm o text-xs) -->
-        <span class="text-cyan-400 text-sm font-bold" style="font-family: 'Orbitron', sans-serif;">ID: 01</span>
-        <!-- "¡Bienvenida!" en fuente Lexend, color blanco -->
-        <span class="text-white text-sm font-normal" style="font-family: 'Lexend', sans-serif;">¡Bienvenida!</span>
-    </div>
-    
-    <!-- Segunda línea: "Rosa Linda" en fuente Orbitron/Lexend, color azul -->
-    <span class="text-blue-400 text-base font-bold leading-tight" style="font-family: 'Orbitron', sans-serif;">Rosa Linda</span>
-</div>
-
+            <!-- Primera línea: ID y ¡Bienvenida! -->
+            <div class="flex items-center gap-2">
+                <span class="text-cyan-400 text-sm font-bold" style="font-family: 'Orbitron', sans-serif;">ID: 01</span>
+                <span class="text-white text-sm font-normal" style="font-family: 'Lexend', sans-serif;">¡Bienvenida!</span>
+            </div>
+            
+            <!-- Segunda línea: Nombre -->
+            <span class="text-blue-400 text-base font-bold leading-tight" style="font-family: 'Orbitron', sans-serif;">Rosa Linda</span>
         </div>
 
         <nav class="flex items-center space-x-3 md:space-x-5">
