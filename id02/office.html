@@ -34,27 +34,51 @@
             }
         }
 
-        // Proteger la página (verificar sesión activa)
+        // Proteger la página (verificar sesión activa y validar carpeta asignada)
         async function protegerPagina() {
             initSupabase();
 
             if (!clientSupabase) {
-                document.body.style.display = 'flex';
+                window.location.href = URL_LOGIN;
                 return;
             }
 
             try {
+                // 1. Verificar si hay sesión
                 const { data: { session }, error } = await clientSupabase.auth.getSession();
                 
                 if (error || !session) {
-                    // Si no hay sesión válida, redirigir al login
                     window.location.href = URL_LOGIN;
-                } else {
-                    // Si la sesión existe, mostrar todo el contenido
-                    document.body.style.display = 'flex';
+                    return;
                 }
+
+                // 2. Consultar en la tabla de Supabase la información del usuario logueado
+                const { data: usuarioData, error: dbError } = await clientSupabase
+                    .from('usuarios_paginas')
+                    .select('email, pagina_privada') // Asegúrate de que 'pagina_privada' guarda valores como 'id01', 'id02', etc.
+                    .single();
+
+                // Si hay error en la consulta RLS o no trae datos
+                if (dbError || !usuarioData) {
+                    console.error('Error o sin permisos RLS:', dbError);
+                    window.location.href = URL_LOGIN;
+                    return;
+                }
+
+                // 3. Validar si la URL actual corresponde a la ruta permitida del usuario
+                const urlActual = window.location.pathname;
+
+                if (!urlActual.includes(`/user/${usuarioData.pagina_privada}/`)) {
+                    alert("No tienes permiso para acceder a este panel de usuario.");
+                    window.location.href = `https://akrocever.github.io/user/${usuarioData.pagina_privada}/office.html`;
+                    return;
+                }
+
+                // Si todas las verificaciones pasan, mostrar el contenido de la página
+                document.body.style.display = 'flex';
+
             } catch (err) {
-                console.error('Error al verificar sesión:', err);
+                console.error('Error general al verificar sesión:', err);
                 window.location.href = URL_LOGIN;
             }
         }
@@ -91,13 +115,13 @@
         </div>
 
         <nav class="flex items-center space-x-3 md:space-x-5">
-            <a href="https://akrocever.github.io/user/id/inversion-usd.html" target="contenedor-virtual" 
+            <a href="https://akrocever.github.io/user/id02/inversion.html" target="contenedor-virtual" 
                class="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-full border border-slate-700 text-slate-300 hover:text-white hover:bg-slate-800 transition-all duration-150 ease-in-out group active:scale-90 active:bg-slate-700 focus:outline-none" 
                title="Inversión">
                 <i class="fa-solid fa-chart-line text-base md:text-lg text-blue-400 group-hover:scale-110 transition-transform"></i>
             </a>
 
-            <a href="https://akrocever.github.io/user/id/ganancias-usd.html" target="contenedor-virtual" 
+            <a href="https://akrocever.github.io/user/id02/ganancias.html" target="contenedor-virtual" 
                class="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-full border border-slate-700 text-slate-300 hover:text-white hover:bg-slate-800 transition-all duration-150 ease-in-out group active:scale-90 active:bg-slate-700 focus:outline-none" 
                title="Pagos">
                 <i class="fa-solid fa-credit-card text-base md:text-lg text-blue-400 group-hover:scale-110 transition-transform"></i>
