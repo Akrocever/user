@@ -35,7 +35,7 @@
             }
         }
 
-        // Buscar la URL privada en la tabla de Supabase y redirigir
+        // Buscar la carpeta privada en la tabla de Supabase y redirigir a office.html
         async function obtenerYRedirigir(email) {
             if (!clientSupabase) initSupabase();
 
@@ -56,8 +56,16 @@
                     return;
                 }
 
-                // Redirección exitosa
-                window.location.href = data.pagina_privada;
+                const carpeta = data.pagina_privada.trim(); // Ej: "id", "id01", "id02"
+
+                // Si por alguna razón la celda traía la URL completa
+                if (carpeta.startsWith('http')) {
+                    window.location.href = carpeta;
+                } else {
+                    // Arma la URL correcta apuntando al archivo office.html dentro de su carpeta
+                    window.location.href = `https://akrocever.github.io/user/${carpeta}/office.html`;
+                }
+
             } catch (err) {
                 alert('Ocurrió un error inesperado al redirigir: ' + err.message);
             }
@@ -112,7 +120,7 @@
                     btnLogin.innerText = 'Iniciar Sesión';
                 } else {
                     btnLogin.innerText = 'Cargando tu página...';
-                    // 2. Redirigir a la URL privada
+                    // 2. Redirigir a la URL privada correspondiente
                     await obtenerYRedirigir(email);
                 }
             } catch (err) {
