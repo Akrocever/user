@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Piasa - Panel de Reclutamiento</title>
+  
+  <!-- Importar las fuentes Orbitron y Lexend desde Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&family=Orbitron:wght@600;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    /* Configuración base */
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #f5f5f5; /* Fondo blanco */
+      font-family: 'Lexend', sans-serif;
+      margin: 0;
+      padding: 20px 15px 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 35px; /* Viñetas un poco más separadas entre sí */
+      min-height: 100vh;
+    }
+
+    /* Título Superior "YSM" más pequeño y sin espacio sobrante abajo */
+    .title-header {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 10px; /* Tamaño reducido */
+      font-weight: 600;
+      color: #000000;
+      text-align: center;
+      letter-spacing: 1px;
+      margin: 0; /* Sin separación extra arriba ni abajo */
+      padding: 0;
+      text-shadow: 0 2px 6px rgba(59, 130, 246, 0.15);
+    }
+
+    /* Contenedor de cada viñeta de chat */
+    .chat-row {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 20px;
+      max-width: 900px;
+      width: 100%;
+    }
+
+    /* Burbuja de estilo chat */
+    .chat-bubble {
+      position: relative;
+      background-color: #ffffff;
+      border: 1px solid #3f94c2;
+      border-radius: 24px;
+      padding: 20px 24px;
+      flex: 1;
+      color: #1a1a1a;
+      font-size: 15px;
+      line-height: 1.5;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+      margin-left: 15px; /* Espacio reservado para el piquito lateral */
+    }
+
+    /* Piquito de la burbuja (SIEMPRE DEL LADO IZQUIERDO) */
+    .chat-bubble::before {
+      content: '';
+      position: absolute;
+      top: 20px;
+      left: -19px;
+      width: 0;
+      height: 0;
+      border-top: 10px solid transparent;
+      border-bottom: 10px solid transparent;
+      border-right: 18px solid #3f94c2;
+    }
+
+    .chat-bubble::after {
+      content: '';
+      position: absolute;
+      top: 23px;
+      left: -14px;
+      width: 0;
+      height: 0;
+      border-top: 7px solid transparent;
+      border-bottom: 7px solid transparent;
+      border-right: 14px solid #ffffff;
+    }
+
+    .chat-content {
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    /* Botón de copiar */
+    .btn-copy {
+      background-color: #3f94c2;
+      color: #ffffff;
+      border: none;
+      border-radius: 18px;
+      padding: 25px 35px;
+      font-family: 'Lexend', sans-serif;
+      font-size: 24px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+      flex-shrink: 0;
+      text-align: center;
+    }
+
+    .btn-copy:hover {
+      background-color: #2563eb;
+    }
+
+    .btn-copy:active {
+      transform: scale(0.98);
+    }
+
+    .btn-copy.copied {
+      background-color: #10b981;
+    }
+
+    /* Sección de Botones de Enlaces Web */
+    .links-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      max-width: 900px;
+      width: 100%;
+      margin-top: 10px;
+      padding-top: 25px;
+      border-top: 2px dashed #3f94c2;
+    }
+
+    .btn-web {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #ffffff;
+      color: #3f94c2;
+      border: 2px solid #3f94c2;
+      border-radius: 14px;
+      padding: 14px 20px;
+      font-family: 'Lexend', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      text-decoration: none;
+      text-align: center;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .btn-web:hover {
+      background-color: #3b82f6;
+      color: #ffffff;
+      transform: translateY(-2px);
+    }
+
+    /* ---------------------------------------------------- */
+    /* ADAPTACIÓN PARA MÓVILES (Celulares)                  */
+    /* ---------------------------------------------------- */
+    @media (max-width: 768px) {
+      body {
+        padding: 15px 10px 30px;
+        gap: 30px; /* Mantener buen espacio en celulares */
+      }
+
+      .title-header {
+        font-size: 26px; /* Más proporcionado en celular */
+      }
+
+      .chat-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+      }
+
+/* Burbuja de estilo chat con borde delgado */
+.chat-bubble {
+  position: relative;
+  background-color: #ffffff;
+  border: 1px solid #3f94c2; /* Borde más delgado */
+  border-radius: 24px;
+  padding: 20px 24px;
+  flex: 1;
+  color: #1a1a1a;
+  font-size: 15px;
+  line-height: 1.5;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+  margin-left: 15px;
+}
+
+/* Piquito ajustado al borde delgado */
+.chat-bubble::before {
+  content: '';
+  position: absolute;
+  top: 20px;
+  left: -17px;
+  width: 0;
+  height: 0;
+  border-top: 9px solid transparent;
+  border-bottom: 9px solid transparent;
+  border-right: 16px solid #3f94c2;
+}
+
+.chat-bubble::after {
+  content: '';
+  position: absolute;
+  top: 21.5px;
+  left: -13px;
+  width: 0;
+  height: 0;
+  border-top: 7.5px solid transparent;
+  border-bottom: 7.5px solid transparent;
+  border-right: 13.5px solid #ffffff;
+}
+
+      .btn-copy {
+        width: 100%;
+        padding: 14px;
+        font-size: 18px;
+        border-radius: 14px;
+      }
+
+      .links-container {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Encabezado compacto en fuente Orbitron -->
+  <h1 class="title-header">PIASA</h1>
+
+  <!-- ================= VIÑETA 1 ================= -->
+  <div class="chat-row">
+    <div class="chat-bubble">
+      <div class="chat-content">Hola, Le atiende ___.
+Me comunico por parte de la agencia 𝗦𝗼𝗹𝘂𝗰𝗶𝗼𝗻𝗲𝘀 𝗝𝗶𝗿𝗲𝗱, Esta vacante es para la empresa 𝗣𝗜𝗔𝗦𝗔.
+• La contratación es directa con la empresa.
+Le comparto la información:👇</div>
+    </div>
+    <button class="btn-copy" onclick="copiarTexto(this)">Copiar</button>
+  </div>
+
+  <!-- ================= VIÑETA 2 ================= -->
+  <div class="chat-row">
+    <div class="chat-bubble">
+      <div class="chat-content">🌟 ÚNETE A PIASA KRONOS Y STIVA 🌟
+🏭 Somos una empresa dedicada a la producción y manufactura industrial ubicada en el Parque Industrial Kronos y Stiva.
+
+📌 Se dedican a la Elaboración de   Aderezos, Sazonadores, Productos Liquidos y en Polvo 
+
+ Vacantes disponibles:
+
+🍄‍🟫 PIASA KRONOS 
+💠 PLANTA CLIMATIZADA
+
+👷‍♀️👷‍♂️ Ayudante General:
+   HOMBRES Y MUJERES
+ SD $ 366 Pesos 
+$ 3006 - ISR SEMANALES 
+
+🚜 Montacarguista HP
+   HOMBRES
+SD $453
+: $3,615- ISR SEMANALES 
+
+✨ALMACEN FLEXPARK 
+
+👷‍♂️ AYUDANTES GENERALES HOMBRES 
+SD $366
+$3006-ISR SEMANALES 
+
+🗓️ Pago semanal: Todos los viernes por nómina Banamex.
+
+📌 Requisitos:
+🟡 Hombres  de 18 a 55 años.
+🔹 Escolaridad mínima: Primaria terminada.
+✅ Aceptamos con tatuajes.
+✅ Disponibilidad para rotar turnos.
+✅ No necesitas experiencia previa.
+
+🕒 Turnos rotativos:
+DESCANSAN 3 DIAS
+
+🔵 1 MES SE TRABAJA DE LUNES A JUEVES 
+( L,M,M 12 HRS Y JUEVES 6 HRS)
+EL SIGUIENTE MES JUEVES A DOMINGO ( JUEVES 6 HRS V,S,Y D  DE 12 HRS)
+HORARIO LABORAL POR SEMANA 
+SE ROTAN DIA Y NOCHE 
+
+🎁 Beneficios que te ofrecemos:
+🤑 BONO POR PERMANENCIA 
+$3000 PESOS 
+Diferidos 
+1er mes.   $1000 
+5to mes.  $2000
+
+🟡 Prestaciones de ley.
+🔴 Fondo de ahorro (7%).
+🟢 Seguro de gastos médicos mayores.
+🟣 Utilidades anuales.
+🟤 Premio semanal de puntualidad: $150.
+🟢 Premio semanal de Asistencia $150.00
+🟠 Comedor subsidiado.
+⚫ Bono de despensa mensual 8%
+🌐 Fondo de Ahorro 
+🔵 uniformes y Servicio de Lavandería 
+🟠 Beneficios por Paternidad, Nupcias y Fallecimiento 
+
+📌 Otros detalles importantes:
+✔️ Realizamos examen médico y antidoping.
+✔️ Semana desfazada.
+
+🔵 REQUISITOS PARA SU ENTREVISTA CONTAR CON LOS SIGUIENTES DOCUMENTOS:
+✔️ INE
+✔️ CURP
+✔️ NSS
+✔️ RFC
+✔️ ACTA DE NACIMIENTO 
+✔️ COMPROBANTE DE ESTUDIOS 
+✔️ COMPROBANTE DE DOMICILIO
+
+➖➖➖➖➖➖➖➖➖➖ 
+
+🚍 Rutas de transporte:
+
+https://drive.google.com/file/d/1MnsvBJIzuibxNfln9tw76gc5KRQ0l8jP/view?usp=drivesdk
+
+(no puedes tomar el transporte para ir a entrevista).</div>
+    </div>
+    <button class="btn-copy" onclick="copiarTexto(this)">Copiar</button>
+  </div>
+
+  <!-- ================= VIÑETA 3 ================= -->
+  <div class="chat-row">
+    <div class="chat-bubble">
+      <div class="chat-content">Si le interesa checa si le queda la ruta de transporte y me dice si le gustaría agendar cita a entrevista para el día de mañana.</div>
+    </div>
+    <button class="btn-copy" onclick="copiarTexto(this)">Copiar</button>
+  </div>
+
+  <!-- ================= VIÑETA 4 ================= -->
+  <div class="chat-row">
+    <div class="chat-bubble">
+      <div class="chat-content">Muy bien. Si le interesa agendar cita me puedes enviar estos datos y compartirle la siguiente información: 
+
+• Nombre completo
+• Edad
+• Número de teléfono activo para llamadas y WhatsApp</div>
+    </div>
+    <button class="btn-copy" onclick="copiarTexto(this)">Copiar</button>
+  </div>
+
+  <!-- ================= VIÑETA 5 ================= -->
+  <div class="chat-row">
+    <div class="chat-bubble">
+      <div class="chat-content">Gracias. En un momento le envío su PASE.</div>
+    </div>
+    <button class="btn-copy" onclick="copiarTexto(this)">Copiar</button>
+  </div>
+
+  <!-- ================= VIÑETA 6 ================= -->
+  <div class="chat-row">
+    <div class="chat-bubble">
+      <div class="chat-content">✅ 𝗤𝘂𝗲𝗱𝗮 𝗮𝗴𝗲𝗻𝗱𝗮𝗱𝗼 𝘀𝘂 𝗲𝗻𝘁𝗿𝗲𝘃𝗶𝘀𝘁𝗮 para el día de mañana. 
+
+✔️ Punto de reclutamiento en ___. 
+
+🔵 Me confirmas como en una media hora de anticipación para que puedan pasar por ti. déjarme un mensaje de "confirmo asistencia". 
+
+Quedo al pendiente de su cita. Que tenga una excelente ___!.</div>
+    </div>
+    <button class="btn-copy" onclick="copiarTexto(this)">Copiar</button>
+  </div>
+
+  <!-- ================= VIÑETA 7 ================= -->
+  <div class="chat-row">
+    <div class="chat-bubble">
+      <div class="chat-content">✅ 𝗤𝘂𝗲𝗱𝗮 𝗮𝗴𝗲𝗻𝗱𝗮𝗱𝗼 𝘀𝘂 𝗲𝗻𝘁𝗿𝗲𝘃𝗶𝘀𝘁𝗮 para el día de mañana. 
+
+🔵 Acudir a las 8:00 Am 
+
+🔵 Asistir con su papelería en copias. 
+
+📍 ubicación de la empresa👇 
+https://maps.app.goo.gl/aTXCHq3DTj7hynu1A 
+
+🔵 Al llegar a la caseta comentar que viene por parte de la agencia 𝗦𝗼𝗹𝘂𝗰𝗶𝗼𝗻𝗲𝘀 𝗝𝗶𝗿𝗲𝗱. 
+
+Quedo al pendiente de su cita para confirmar su asistencia. 
+
+Que tenga una excelente ___!.</div>
+    </div>
+    <button class="btn-copy" onclick="copiarTexto(this)">Copiar</button>
+  </div>
+
+
+  <!-- ================= 4 BOTONES DE SITIOS WEB ================= -->
+  <div class="links-container">
+    <a href="https://drive.google.com/file/d/1MnsvBJIzuibxNfln9tw76gc5KRQ0l8jP/view?usp=drivesdk" target="_blank" class="btn-web">🚍 Descargar rutas de transporte</a>
+    <a href="https://i.ibb.co/Y7x615wZ/images.jpg" target="contenedor-virtual" class="btn-web">🔳 Imagen del transporte</a>
+    <a href="https://maps.app.goo.gl/aTXCHq3DTj7hynu1A" target="_blank" class="btn-web">📍 Ubicación</a>
+    <a href="https://drive.google.com/file/d/1BELhXMJD3XAJZ9xJzD1bZ-gTheN2gFmp/view?usp=drivesdk" target="_blank" class="btn-web">🔳 Pase de entrevista</a>
+  </div>
+
+
+  <!-- ================= SCRIPT PARA COPIAR ================= -->
+  <script>
+    function copiarTexto(boton) {
+      const contenedor = boton.parentElement;
+      const texto = contenedor.querySelector('.chat-content').innerText;
+
+      navigator.clipboard.writeText(texto).then(() => {
+        const textoOriginal = boton.innerText;
+
+        boton.innerText = '¡Copiado!';
+        boton.classList.add('copied');
+
+        setTimeout(() => {
+          boton.innerText = textoOriginal;
+          boton.classList.remove('copied');
+        }, 2000);
+      }).catch(err => {
+        console.error('Error al copiar el texto: ', err);
+      });
+    }
+  </script>
+
+</body>
+</html>
