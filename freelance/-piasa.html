@@ -10,91 +10,47 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&family=Orbitron:wght@600;800;900&display=swap" rel="stylesheet">
 
-      <!-- Supabase JS SDK -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- Supabase JS SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    <style>
-        body { font-family: 'Lexend', sans-serif; }
-    </style>
+<script>
+  const supabaseUrl = 'https://atiihfgjbpvtjglestyw.supabase.co'; 
+  const supabaseKey = 'sb_publishable_CpzuF8Op8fYh_9znf-tHXg_Ba9xNMnP'; 
+  const URL_LOGIN   = 'https://akrocever.github.io/user/login.html';
 
-    <script>
-        // Configuración de Supabase
-        const supabaseUrl = 'https://atiihfgjbpvtjglestyw.supabase.co'; 
-        const supabaseKey = 'sb_publishable_CpzuF8Op8fYh_9znf-tHXg_Ba9xNMnP'; 
-        const URL_LOGIN   = 'https://akrocever.github.io/user/login.html';
+  async function protegerSubpaginaFreelance() {
+    // 1. Evitar que la subpágina se abra sola fuera del iframe
+    if (window === window.top) {
+      window.top.location.href = URL_LOGIN;
+      return;
+    }
 
-        let clientSupabase = null;
+    // 2. Verificar librería Supabase
+    if (!window.supabase || !window.supabase.createClient) {
+      window.top.location.href = URL_LOGIN;
+      return;
+    }
 
-        function initSupabase() {
-            if (window.supabase && window.supabase.createClient) {
-                clientSupabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-            }
-        }
+    const clientSupabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-        // Proteger la página (verificar sesión activa y validar carpeta asignada)
-        async function protegerPagina() {
-            initSupabase();
+    try {
+      // 3. Validar que exista sesión
+      const { data: { session }, error } = await clientSupabase.auth.getSession();
 
-            if (!clientSupabase) {
-                window.location.href = URL_LOGIN;
-                return;
-            }
+      if (error || !session) {
+        window.top.location.href = URL_LOGIN;
+      } else {
+        // Muestra el contenido dentro del iframe
+        document.body.style.display = 'block';
+      }
+    } catch (err) {
+      console.error('Error al validar sesión:', err);
+      window.top.location.href = URL_LOGIN;
+    }
+  }
 
-            try {
-                // 1. Verificar si hay una sesión activa en Supabase Auth
-                const { data: { session }, error } = await clientSupabase.auth.getSession();
-                
-                if (error || !session) {
-                    window.location.href = URL_LOGIN;
-                    return;
-                }
-
-                // 2. Consultar la tabla para obtener la carpeta asignada al correo logueado
-                const { data: usuarioData, error: dbError } = await clientSupabase
-                    .from('usuarios_paginas')
-                    .select('pagina_privada')
-                    .eq('email', session.user.email)
-                    .maybeSingle();
-
-                // Si no hay datos o falla RLS, cerramos sesión para evitar bucles
-                if (dbError || !usuarioData) {
-                    console.error('Error al consultar datos:', dbError);
-                    alert("No se encontraron permisos para esta cuenta.");
-                    await clientSupabase.auth.signOut();
-                    window.location.href = URL_LOGIN;
-                    return;
-                }
-
-                const carpetaAsignada = usuarioData.pagina_privada; // Ej: "id", "id01", "id02"
-                const urlActual = window.location.pathname;
-
-                // 3. Validar si el usuario está intentando ver la carpeta de ALGUIEN MÁS
-                if (carpetaAsignada && !urlActual.includes(`/${carpetaAsignada}/`)) {
-                    alert("No tienes permiso para acceder a esta cuenta. Redirigiéndote a tu panel...");
-                    window.location.href = `https://akrocever.github.io/user/${carpetaAsignada}/office.html`;
-                    return;
-                }
-
-                // Si la URL coincide con su carpeta asignada, mostramos la página
-                document.body.style.display = 'flex';
-
-            } catch (err) {
-                console.error('Error al verificar sesión:', err);
-                window.location.href = URL_LOGIN;
-            }
-        }
-
-        // Función para cerrar sesión
-        async function cerrarSesion() {
-            initSupabase();
-            if (clientSupabase) {
-                await clientSupabase.auth.signOut();
-            }
-            window.location.href = URL_LOGIN;
-        }
-
-        document.addEventListener('DOMContentLoaded', protegerPagina);
-    </script>
+  document.addEventListener('DOMContentLoaded', protegerSubpaginaFreelance);
+</script>
 
   <style>
     /* Configuración base */
