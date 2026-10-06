@@ -10,47 +10,47 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&family=Orbitron:wght@600;800;900&display=swap" rel="stylesheet">
 
-<!-- Supabase JS SDK -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Supabase JS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<script>
-  const supabaseUrl = 'https://atiihfgjbpvtjglestyw.supabase.co'; 
-  const supabaseKey = 'sb_publishable_CpzuF8Op8fYh_9znf-tHXg_Ba9xNMnP'; 
-  const URL_LOGIN   = 'https://akrocever.github.io/user/login.html';
+  <script>
+    const supabaseUrl = 'https://atiihfgjbpvtjglestyw.supabase.co'; 
+    const supabaseKey = 'sb_publishable_CpzuF8Op8fYh_9znf-tHXg_Ba9xNMnP'; 
+    const URL_LOGIN   = 'https://akrocever.github.io/user/login.html';
 
-  async function protegerSubpaginaFreelance() {
-    // 1. Evitar que la subpágina se abra sola fuera del iframe
-    if (window === window.top) {
-      window.top.location.href = URL_LOGIN;
-      return;
-    }
-
-    // 2. Verificar librería Supabase
-    if (!window.supabase || !window.supabase.createClient) {
-      window.top.location.href = URL_LOGIN;
-      return;
-    }
-
-    const clientSupabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-
-    try {
-      // 3. Validar que exista sesión
-      const { data: { session }, error } = await clientSupabase.auth.getSession();
-
-      if (error || !session) {
+    async function protegerSubpaginaFreelance() {
+      // 1. Evitar que la subpágina se abra sola fuera del iframe
+      if (window === window.top) {
         window.top.location.href = URL_LOGIN;
-      } else {
-        // Muestra el contenido dentro del iframe
-        document.body.style.display = 'block';
+        return;
       }
-    } catch (err) {
-      console.error('Error al validar sesión:', err);
-      window.top.location.href = URL_LOGIN;
-    }
-  }
 
-  document.addEventListener('DOMContentLoaded', protegerSubpaginaFreelance);
-</script>
+      // 2. Verificar librería Supabase
+      if (!window.supabase || !window.supabase.createClient) {
+        window.top.location.href = URL_LOGIN;
+        return;
+      }
+
+      const clientSupabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+      try {
+        // 3. Validar que exista sesión
+        const { data: { session }, error } = await clientSupabase.auth.getSession();
+
+        if (error || !session) {
+          window.top.location.href = URL_LOGIN;
+        } else {
+          // Muestra el contenido dentro del iframe
+          document.body.style.display = 'block';
+        }
+      } catch (err) {
+        console.error('Error al validar sesión:', err);
+        window.top.location.href = URL_LOGIN;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', protegerSubpaginaFreelance);
+  </script>
 
   <style>
     /* Configuración base */
@@ -59,26 +59,27 @@
     }
 
     body {
-      background-color: #f5f5f5; /* Fondo blanco */
+      background-color: #f5f5f5; /* Fondo claro */
       font-family: 'Lexend', sans-serif;
       margin: 0;
-      padding: 20px 15px 40px;
+      padding: 20px 15px 50px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 35px; /* Viñetas un poco más separadas entre sí */
+      gap: 30px; /* Separación constante entre cada bloque de chat */
       min-height: 100vh;
+      display: none; /* Se activa mediante el script de Supabase */
     }
 
-    /* Título Superior "PIASA" (Versión Computadora) */
+    /* Título Superior "PIASA" */
     .title-header {
       font-family: 'Orbitron', sans-serif;
-      font-size: 18px; /* Reducido para Computadora */
+      font-size: 18px;
       font-weight: 600;
       color: #000000;
       text-align: center;
       letter-spacing: 1px;
-      margin: 0; /* Sin separación extra arriba ni abajo */
+      margin: 0 0 10px 0;
       padding: 0;
       text-shadow: 0 2px 6px rgba(59, 130, 246, 0.15);
     }
@@ -91,6 +92,7 @@
       gap: 20px;
       max-width: 900px;
       width: 100%;
+      margin-bottom: 10px;
     }
 
     /* Burbuja de estilo chat */
@@ -105,10 +107,10 @@
       font-size: 15px;
       line-height: 1.5;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
-      margin-left: 15px; /* Espacio reservado para el piquito lateral */
+      margin-left: 15px; /* Espacio para el piquito lateral */
     }
 
-    /* Piquito de la burbuja (SIEMPRE DEL LADO IZQUIERDO) */
+    /* Piquito de la burbuja */
     .chat-bubble::before {
       content: '';
       position: absolute;
@@ -144,7 +146,7 @@
       color: #ffffff;
       border: none;
       border-radius: 12px;
-      padding: 10px 20px;
+      padding: 12px 24px;
       font-family: 'Lexend', sans-serif;
       font-size: 15px;
       font-weight: 500;
@@ -174,7 +176,7 @@
       gap: 15px;
       max-width: 900px;
       width: 100%;
-      margin-top: 10px;
+      margin-top: 20px;
       padding-top: 25px;
       border-top: 2px dashed #3f94c2;
     }
@@ -208,65 +210,51 @@
     /* ---------------------------------------------------- */
     @media (max-width: 768px) {
       body {
-        padding: 15px 10px 30px;
-        gap: 30px; /* Mantener buen espacio en celulares */
+        padding: 15px 10px 40px;
+        gap: 25px;
       }
 
       .title-header {
-        font-size: 16px; /* Reducido para Celulares */
+        font-size: 16px;
       }
 
       .chat-row {
         flex-direction: column;
         align-items: stretch;
         gap: 12px;
+        margin-bottom: 15px;
       }
 
-      /* Burbuja de estilo chat con borde delgado */
       .chat-bubble {
-        position: relative;
-        background-color: #ffffff;
-        border: 1px solid #3f94c2;
-        border-radius: 24px;
-        padding: 20px 24px;
-        flex: 1;
-        color: #1a1a1a;
-        font-size: 15px;
-        line-height: 1.5;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
-        margin-left: 15px;
+        margin-left: 0;
+        margin-top: 10px;
       }
 
-      /* Piquito ajustado al borde delgado */
+      /* Orientación del piquito hacia arriba en celulares */
       .chat-bubble::before {
-        content: '';
-        position: absolute;
-        top: 20px;
-        left: -17px;
-        width: 0;
-        height: 0;
-        border-top: 9px solid transparent;
-        border-bottom: 9px solid transparent;
-        border-right: 16px solid #3f94c2;
+        top: -18px;
+        left: 24px;
+        border-left: 9px solid transparent;
+        border-right: 9px solid transparent;
+        border-bottom: 18px solid #3f94c2;
+        border-top: none;
       }
 
       .chat-bubble::after {
-        content: '';
-        position: absolute;
-        top: 21.5px;
-        left: -13px;
-        width: 0;
-        height: 0;
-        border-top: 7.5px solid transparent;
-        border-bottom: 7.5px solid transparent;
-        border-right: 13.5px solid #ffffff;
+        top: -13px;
+        left: 25.5px;
+        border-left: 7.5px solid transparent;
+        border-right: 7.5px solid transparent;
+        border-bottom: 13.5px solid #ffffff;
+        border-top: none;
       }
 
       .btn-copy {
         width: 100%;
         padding: 14px;
-        font-size: 18px;
+        font-size: 16px;
         border-radius: 14px;
+        margin-top: 4px;
       }
 
       .links-container {
@@ -277,7 +265,7 @@
 </head>
 <body>
 
-  <!-- Encabezado compacto en fuente Orbitron -->
+  <!-- Encabezado compacto -->
   <h1 class="title-header">PIASA</h1>
 
   <!-- ================= VIÑETA 1 ================= -->
@@ -297,16 +285,16 @@ Le comparto la información:👇</div>
       <div class="chat-content">🌟 ÚNETE A PIASA KRONOS Y STIVA 🌟
 🏭 Somos una empresa dedicada a la producción y manufactura industrial ubicada en el Parque Industrial Kronos y Stiva.
 
-📌 Se dedican a la Elaboración de   Aderezos, Sazonadores, Productos Liquidos y en Polvo 
+📌 Se dedican a la Elaboración de Aderezos, Sazonadores, Productos Liquidos y en Polvo 
 
- Vacantes disponibles:
+Vacantes disponibles:
 
 🍄‍🟫 PIASA KRONOS 
 💠 PLANTA CLIMATIZADA
 
 👷‍♀️👷‍♂️ Ayudante General:
    HOMBRES Y MUJERES
- SD $366 Pesos$ 3006 - ISR SEMANALES 
+ SD $366 Pesos $ 3006 - ISR SEMANALES 
 
 🚜 Montacarguista HP
    HOMBRES
@@ -322,7 +310,7 @@ $3006-ISR SEMANALES
 🗓️ Pago semanal: Todos los viernes por nómina Banamex.
 
 📌 Requisitos:
-🟡 Hombres  de 18 a 55 años.
+🟡 Hombres de 18 a 55 años.
 🔹 Escolaridad mínima: Primaria terminada.
 ✅ Aceptamos con tatuajes.
 ✅ Disponibilidad para rotar turnos.
@@ -333,7 +321,7 @@ DESCANSAN 3 DIAS
 
 🔵 1 MES SE TRABAJA DE LUNES A JUEVES 
 ( L,M,M 12 HRS Y JUEVES 6 HRS)
-EL SIGUIENTE MES JUEVES A DOMINGO ( JUEVES 6 HRS V,S,Y D  DE 12 HRS)
+EL SIGUIENTE MES JUEVES A DOMINGO ( JUEVES 6 HRS V,S,Y D DE 12 HRS)
 HORARIO LABORAL POR SEMANA 
 SE ROTAN DIA Y NOCHE 
 
@@ -353,7 +341,7 @@ Diferidos
 🟠 Comedor subsidiado.
 ⚫ Bono de despensa mensual 8%
 🌐 Fondo de Ahorro 
-🔵 uniformes y Servicio de Lavandería 
+🔵 Uniformes y Servicio de Lavandería 
 🟠 Beneficios por Paternidad, Nupcias y Fallecimiento 
 
 📌 Otros detalles importantes:
@@ -371,11 +359,11 @@ Diferidos
 
 ➖➖➖➖➖➖➖➖➖➖ 
 
-`🚍 Rutas de transporte:
+🚍 Rutas de transporte:
 
 https://drive.google.com/file/d/1MnsvBJIzuibxNfln9tw76gc5KRQ0l8jP/view?usp=drivesdk
 
-(no puedes tomar el transporte para ir a entrevista).`</div>
+(no puedes tomar el transporte para ir a entrevista).</div>
     </div>
     <button class="btn-copy" onclick="copiarTexto(this)">Copiar</button>
   </div>
@@ -413,7 +401,7 @@ https://drive.google.com/file/d/1MnsvBJIzuibxNfln9tw76gc5KRQ0l8jP/view?usp=drive
     <div class="chat-bubble">
       <div class="chat-content">✅ 𝗤𝘂𝗲𝗱𝗮 𝗮𝗴𝗲𝗻𝗱𝗮𝗱𝗼 𝘀𝘂 𝗲𝗻𝘁𝗿𝗲𝘃𝗶𝘀𝘁𝗮 para el día de mañana. 
 
-✔️ Punto de reclutamiento en ___. 
+✔️️ Punto de reclutamiento en ___. 
 
 🔵 Me confirmas como en una media hora de anticipación para que puedan pasar por ti. déjarme un mensaje de "confirmo asistencia". 
 
@@ -443,15 +431,13 @@ Que tenga una excelente ___!.</div>
     <button class="btn-copy" onclick="copiarTexto(this)">Copiar</button>
   </div>
 
-
   <!-- ================= 4 BOTONES DE SITIOS WEB ================= -->
   <div class="links-container">
     <a href="https://drive.google.com/file/d/1MnsvBJIzuibxNfln9tw76gc5KRQ0l8jP/view?usp=drivesdk" target="_blank" class="btn-web">🚍 Descargar rutas de transporte</a>
-    <a href="https://i.ibb.co/Y7x615wZ/images.jpg" target="contenedor-virtual" class="btn-web">🔳 Imagen del transporte</a>
+    <a href="https://i.ibb.co/Y7x615wZ/images.jpg" target="_blank" class="btn-web">🔳 Imagen del transporte</a>
     <a href="https://maps.app.goo.gl/aTXCHq3DTj7hynu1A" target="_blank" class="btn-web">📍 Ubicación</a>
     <a href="https://drive.google.com/file/d/1BELhXMJD3XAJZ9xJzD1bZ-gTheN2gFmp/view?usp=drivesdk" target="_blank" class="btn-web">🔳 Pase de entrevista</a>
   </div>
-
 
   <!-- ================= SCRIPT PARA COPIAR ================= -->
   <script>
