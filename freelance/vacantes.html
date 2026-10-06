@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Empresas</title>
+  
+  <!-- Importar la fuente Lexend desde Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* Configuración base */
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #ffffff; /* Fondo blanco */
+      font-family: 'Lexend', sans-serif;
+      margin: 0;
+      padding: 30px 20px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
+
+    /* Contenedor cuadrícula principal */
+    .companies-grid {
+      display: grid;
+      width: 100%;
+      max-width: 1100px;
+      gap: 18px;
+      
+      /* Computadoras: 4 columnas por defecto */
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    /* Botones de empresas */
+    .btn-company {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      min-height: 56px;
+      background-color: #ffffff;
+      color: #000000;
+      border: 1.5px solid #3f94c2; /* Borde azul delgado */
+      border-radius: 14px;
+      padding: 12px 16px;
+      font-family: 'Lexend', sans-serif;
+      font-size: 18px;
+      font-weight: 500;
+      text-decoration: none;
+      text-align: center;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+    }
+
+    .btn-company:hover {
+      background-color: #f0f8ff;
+      border-color: #2c7399;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(63, 148, 194, 0.15);
+    }
+
+    .btn-company:active {
+      transform: translateY(0);
+    }
+
+    /* ---------------------------------------------------- */
+    /* ADAPTABILIDAD A TABLETS Y CELULARES                 */
+    /* ---------------------------------------------------- */
+
+    /* Tablets (Pantallas medianas hasta 900px): 3 columnas */
+    @media (max-width: 900px) {
+      .companies-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+      }
+      
+      .btn-company {
+        font-size: 17px;
+        min-height: 52px;
+      }
+    }
+
+    /* Celulares (Pantallas pequeñas hasta 600px): 2 columnas */
+    @media (max-width: 600px) {
+      body {
+        padding: 20px 12px;
+      }
+
+      .companies-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+
+      .btn-company {
+        font-size: 16px;
+        min-height: 48px;
+        border-radius: 12px;
+        padding: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Cuadrícula de Botones -->
+  <div class="companies-grid">
+    <a href="https://google.com" target="contenedor-virtual" class="btn-company">AISIN</a>
+    <a href="https://google.com" target="contenedor-virtual" class="btn-company">HUSSMANN</a>
+    <a href="https://google.com" target="contenedor-virtual" class="btn-company">PIASA</a>
+    <a href="https://google.com" target="contenedor-virtual" class="btn-company">YSM</a>
+  </div>
+
+</body>
+</html>
