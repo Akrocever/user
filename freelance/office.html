@@ -11,7 +11,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-<!-- Supabase JS SDK -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
@@ -19,8 +18,8 @@
   const supabaseKey = 'sb_publishable_CpzuF8Op8fYh_9znf-tHXg_Ba9xNMnP'; 
   const URL_LOGIN   = 'https://akrocever.github.io/user/login.html';
 
-  async function protegerPaginaGeneral() {
-    // 1. Verificar si la librería Supabase está disponible
+  async function verificarAccesoOffice() {
+    // 1. Verificar si la librería cargó correctamente
     if (!window.supabase || !window.supabase.createClient) {
       window.location.href = URL_LOGIN;
       return;
@@ -29,14 +28,14 @@
     const clientSupabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
     try {
-      // 2. Verificar si hay CUALQUIER sesión activa
+      // 2. Obtener la sesión actual
       const { data: { session }, error } = await clientSupabase.auth.getSession();
 
+      // 3. Si hay error o la sesión expiró/no existe, expulsar al Login
       if (error || !session) {
-        // Si no está logueado, lo envía al login
         window.location.href = URL_LOGIN;
       } else {
-        // Si está logueado (sea id, id01, id02, etc.), muestra la página
+        // 4. Únicamente si la sesión es válida, mostrar la página
         document.body.style.display = 'block';
       }
     } catch (err) {
@@ -45,7 +44,7 @@
     }
   }
 
-  document.addEventListener('DOMContentLoaded', protegerPaginaGeneral);
+  document.addEventListener('DOMContentLoaded', verificarAccesoOffice);
 </script>
   
     <style>
@@ -53,6 +52,9 @@
         .font-orbitron { font-family: 'Orbitron', sans-serif; }
     </style>
 </head>
+
+<body style="display: none;">
+    
 <!-- Padding superior para dejar espacio al encabezado fijo (h-60px) -->
 <body class="bg-gray-100 min-h-screen flex flex-col pt-15">
 
