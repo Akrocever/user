@@ -10,6 +10,92 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&family=Orbitron:wght@600;800;900&display=swap" rel="stylesheet">
 
+      <!-- Supabase JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        body { font-family: 'Lexend', sans-serif; }
+    </style>
+
+    <script>
+        // Configuración de Supabase
+        const supabaseUrl = 'https://atiihfgjbpvtjglestyw.supabase.co'; 
+        const supabaseKey = 'sb_publishable_CpzuF8Op8fYh_9znf-tHXg_Ba9xNMnP'; 
+        const URL_LOGIN   = 'https://akrocever.github.io/user/login.html';
+
+        let clientSupabase = null;
+
+        function initSupabase() {
+            if (window.supabase && window.supabase.createClient) {
+                clientSupabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+            }
+        }
+
+        // Proteger la página (verificar sesión activa y validar carpeta asignada)
+        async function protegerPagina() {
+            initSupabase();
+
+            if (!clientSupabase) {
+                window.location.href = URL_LOGIN;
+                return;
+            }
+
+            try {
+                // 1. Verificar si hay una sesión activa en Supabase Auth
+                const { data: { session }, error } = await clientSupabase.auth.getSession();
+                
+                if (error || !session) {
+                    window.location.href = URL_LOGIN;
+                    return;
+                }
+
+                // 2. Consultar la tabla para obtener la carpeta asignada al correo logueado
+                const { data: usuarioData, error: dbError } = await clientSupabase
+                    .from('usuarios_paginas')
+                    .select('pagina_privada')
+                    .eq('email', session.user.email)
+                    .maybeSingle();
+
+                // Si no hay datos o falla RLS, cerramos sesión para evitar bucles
+                if (dbError || !usuarioData) {
+                    console.error('Error al consultar datos:', dbError);
+                    alert("No se encontraron permisos para esta cuenta.");
+                    await clientSupabase.auth.signOut();
+                    window.location.href = URL_LOGIN;
+                    return;
+                }
+
+                const carpetaAsignada = usuarioData.pagina_privada; // Ej: "id", "id01", "id02"
+                const urlActual = window.location.pathname;
+
+                // 3. Validar si el usuario está intentando ver la carpeta de ALGUIEN MÁS
+                if (carpetaAsignada && !urlActual.includes(`/${carpetaAsignada}/`)) {
+                    alert("No tienes permiso para acceder a esta cuenta. Redirigiéndote a tu panel...");
+                    window.location.href = `https://akrocever.github.io/user/${carpetaAsignada}/office.html`;
+                    return;
+                }
+
+                // Si la URL coincide con su carpeta asignada, mostramos la página
+                document.body.style.display = 'flex';
+
+            } catch (err) {
+                console.error('Error al verificar sesión:', err);
+                window.location.href = URL_LOGIN;
+            }
+        }
+
+        // Función para cerrar sesión
+        async function cerrarSesion() {
+            initSupabase();
+            if (clientSupabase) {
+                await clientSupabase.auth.signOut();
+            }
+            window.location.href = URL_LOGIN;
+        }
+
+        document.addEventListener('DOMContentLoaded', protegerPagina);
+    </script>
+
   <style>
     /* Configuración base */
     * {
@@ -28,10 +114,10 @@
       min-height: 100vh;
     }
 
-    /* Título Superior "YSM" más pequeño y sin espacio sobrante abajo */
+    /* Título Superior "PIASA" (Versión Computadora) */
     .title-header {
       font-family: 'Orbitron', sans-serif;
-      font-size: 10px; /* Tamaño reducido */
+      font-size: 18px; /* Reducido para Computadora */
       font-weight: 600;
       color: #000000;
       text-align: center;
@@ -101,10 +187,10 @@
       background-color: #3f94c2;
       color: #ffffff;
       border: none;
-      border-radius: 18px;
-      padding: 25px 35px;
+      border-radius: 12px;
+      padding: 10px 20px;
       font-family: 'Lexend', sans-serif;
-      font-size: 24px;
+      font-size: 15px;
       font-weight: 500;
       cursor: pointer;
       transition: all 0.2s ease;
@@ -171,7 +257,7 @@
       }
 
       .title-header {
-        font-size: 26px; /* Más proporcionado en celular */
+        font-size: 16px; /* Reducido para Celulares */
       }
 
       .chat-row {
@@ -180,45 +266,45 @@
         gap: 12px;
       }
 
-/* Burbuja de estilo chat con borde delgado */
-.chat-bubble {
-  position: relative;
-  background-color: #ffffff;
-  border: 1px solid #3f94c2; /* Borde más delgado */
-  border-radius: 24px;
-  padding: 20px 24px;
-  flex: 1;
-  color: #1a1a1a;
-  font-size: 15px;
-  line-height: 1.5;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
-  margin-left: 15px;
-}
+      /* Burbuja de estilo chat con borde delgado */
+      .chat-bubble {
+        position: relative;
+        background-color: #ffffff;
+        border: 1px solid #3f94c2;
+        border-radius: 24px;
+        padding: 20px 24px;
+        flex: 1;
+        color: #1a1a1a;
+        font-size: 15px;
+        line-height: 1.5;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+        margin-left: 15px;
+      }
 
-/* Piquito ajustado al borde delgado */
-.chat-bubble::before {
-  content: '';
-  position: absolute;
-  top: 20px;
-  left: -17px;
-  width: 0;
-  height: 0;
-  border-top: 9px solid transparent;
-  border-bottom: 9px solid transparent;
-  border-right: 16px solid #3f94c2;
-}
+      /* Piquito ajustado al borde delgado */
+      .chat-bubble::before {
+        content: '';
+        position: absolute;
+        top: 20px;
+        left: -17px;
+        width: 0;
+        height: 0;
+        border-top: 9px solid transparent;
+        border-bottom: 9px solid transparent;
+        border-right: 16px solid #3f94c2;
+      }
 
-.chat-bubble::after {
-  content: '';
-  position: absolute;
-  top: 21.5px;
-  left: -13px;
-  width: 0;
-  height: 0;
-  border-top: 7.5px solid transparent;
-  border-bottom: 7.5px solid transparent;
-  border-right: 13.5px solid #ffffff;
-}
+      .chat-bubble::after {
+        content: '';
+        position: absolute;
+        top: 21.5px;
+        left: -13px;
+        width: 0;
+        height: 0;
+        border-top: 7.5px solid transparent;
+        border-bottom: 7.5px solid transparent;
+        border-right: 13.5px solid #ffffff;
+      }
 
       .btn-copy {
         width: 100%;
@@ -264,8 +350,7 @@ Le comparto la información:👇</div>
 
 👷‍♀️👷‍♂️ Ayudante General:
    HOMBRES Y MUJERES
- SD $ 366 Pesos 
-$ 3006 - ISR SEMANALES 
+ SD $366 Pesos$ 3006 - ISR SEMANALES 
 
 🚜 Montacarguista HP
    HOMBRES
@@ -330,11 +415,11 @@ Diferidos
 
 ➖➖➖➖➖➖➖➖➖➖ 
 
-🚍 Rutas de transporte:
+`🚍 Rutas de transporte:
 
 https://drive.google.com/file/d/1MnsvBJIzuibxNfln9tw76gc5KRQ0l8jP/view?usp=drivesdk
 
-(no puedes tomar el transporte para ir a entrevista).</div>
+(no puedes tomar el transporte para ir a entrevista).`</div>
     </div>
     <button class="btn-copy" onclick="copiarTexto(this)">Copiar</button>
   </div>
