@@ -10,6 +10,48 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
+  <!-- Supabase JS SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+  const supabaseUrl = 'https://atiihfgjbpvtjglestyw.supabase.co'; 
+  const supabaseKey = 'sb_publishable_CpzuF8Op8fYh_9znf-tHXg_Ba9xNMnP'; 
+  const URL_LOGIN   = 'https://akrocever.github.io/user/login.html';
+
+  async function protegerSubpaginaFreelance() {
+    // 1. Evitar que la subpágina se abra sola fuera del iframe
+    if (window === window.top) {
+      window.top.location.href = URL_LOGIN;
+      return;
+    }
+
+    // 2. Verificar librería Supabase
+    if (!window.supabase || !window.supabase.createClient) {
+      window.top.location.href = URL_LOGIN;
+      return;
+    }
+
+    const clientSupabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+    try {
+      // 3. Validar que exista sesión
+      const { data: { session }, error } = await clientSupabase.auth.getSession();
+
+      if (error || !session) {
+        window.top.location.href = URL_LOGIN;
+      } else {
+        // Muestra el contenido dentro del iframe
+        document.body.style.display = 'block';
+      }
+    } catch (err) {
+      console.error('Error al validar sesión:', err);
+      window.top.location.href = URL_LOGIN;
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', protegerSubpaginaFreelance);
+</script>
+
   <style>
     /* Configuración base */
     * {
@@ -111,10 +153,10 @@
 
   <!-- Cuadrícula de Botones -->
   <div class="companies-grid">
-    <a href="https://google.com" target="contenedor-virtual" class="btn-company">AISIN</a>
-    <a href="https://google.com" target="contenedor-virtual" class="btn-company">HUSSMANN</a>
-    <a href="https://akrocever.github.io/user/freelance/-piasa.html" target="contenedor-virtual" class="btn-company">PIASA</a>
-    <a href="https://google.com" target="contenedor-virtual" class="btn-company">YSM</a>
+    <a href="https://google.com" target="_blank" class="btn-company">AISIN</a>
+    <a href="https://google.com" target="_blank" class="btn-company">HUSSMANN</a>
+    <a href="https://akrocever.github.io/user/freelance/-piasa.html" target="_blank" class="btn-company">PIASA</a>
+    <a href="https://google.com" target="_blank" class="btn-company">YSM</a>
   </div>
 
 </body>
