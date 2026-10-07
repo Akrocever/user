@@ -82,46 +82,6 @@
       100% { transform: translateX(180%)  skewX(-15deg); }
     }
 
-    /* ── Header principal ── */
-    .main-header {
-      background: #003f5c;
-      color: white;
-      padding: 12px 20px;
-      border-radius: 12px;
-      margin-bottom: 32px;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-      box-shadow: 
-        0 0 0 4px #3e8fb8,
-        0 0 16px 6px rgba(62, 143, 184, 0.5),
-        0 0 32px 12px rgba(62, 143, 184, 0.3);
-    }
-
-    .main-header::before {
-      content: '';
-      position: absolute;
-      inset: -50% -120% -50% -120%;
-      background: linear-gradient(90deg, transparent 20%, rgba(255,255,255,0.45) 45%, rgba(255,255,255,0.25) 50%, transparent 80%);
-      animation: shineHorizontal 6s linear infinite;
-      pointer-events: none;
-      transform: skewX(-15deg);
-    }
-
-    .main-header h1 {
-      font-size: 20px;
-      font-weight: 900;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      margin-bottom: 2px;
-    }
-
-    .main-header p {
-      font-size: 15px;
-      font-weight: 500;
-      opacity: 0.95;
-    }
-
     /* ── Títulos de sección ── */
     .section-title {
       text-align: center;
@@ -299,11 +259,6 @@
 <body>
 
 <div class="container">
-
-  <div class="main-header">
-    <h1>MIS GANANCIAS</h1>
-    <p>Monitorea tus pagos aquí</p>
-  </div>
 
   <h2 class="section-title">CONTROL FINANCIERO</h2>
 
