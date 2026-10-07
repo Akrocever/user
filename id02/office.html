@@ -106,34 +106,37 @@
         <div class="flex flex-col justify-center">
             <!-- Primera línea: ID y ¡Bienvenida! -->
             <div class="flex items-center gap-2">
-                <span class="text-cyan-400 text-sm font-bold" style="font-family: 'Orbitron', sans-serif;">ID: 02</span>
+                <span class="text-cyan-400 text-sm font-bold" style="font-family: 'Orbitron', sans-serif;">ID: 01</span>
                 <span class="text-white text-sm font-normal" style="font-family: 'Lexend', sans-serif;">¡Bienvenida!</span>
             </div>
             
             <!-- Segunda línea: Nombre -->
-            <span class="text-blue-400 text-base font-bold leading-tight" style="font-family: 'Orbitron', sans-serif;">Esmeralda Trejo</span>
+            <span class="text-blue-400 text-base font-bold leading-tight" style="font-family: 'Orbitron', sans-serif;">Fátima Garza</span>
         </div>
 
         <nav class="flex items-center space-x-3 md:space-x-5">
+            <!-- Botón 1: Inversión -->
             <a href="https://akrocever.github.io/user/id02/inversion.html" target="contenedor-virtual" 
                class="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-full border border-slate-700 text-slate-300 hover:text-white hover:bg-slate-800 transition-all duration-150 ease-in-out group active:scale-90 active:bg-slate-700 focus:outline-none" 
                title="Inversión">
                 <i class="fa-solid fa-chart-line text-base md:text-lg text-blue-400 group-hover:scale-110 transition-transform"></i>
             </a>
 
-            <a href="https://akrocever.github.io/user/id02/ganancias.html" target="contenedor-virtual" 
+            <!-- Botón 2: Vacantes / Empleo -->
+            <a href="https://akrocever.github.io/user/freelance/office.html" target="contenedor-virtual" 
                class="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-full border border-slate-700 text-slate-300 hover:text-white hover:bg-slate-800 transition-all duration-150 ease-in-out group active:scale-90 active:bg-slate-700 focus:outline-none" 
-               title="Pagos">
-                <i class="fa-solid fa-credit-card text-base md:text-lg text-blue-400 group-hover:scale-110 transition-transform"></i>
+               title="vacantes">
+                <i class="fa-solid fa-briefcase text-base md:text-lg text-blue-400 group-hover:scale-110 transition-transform"></i>
             </a>
 
-            <!-- Botón de Cerrar Sesión -->
+            <!-- Botón 4: Cerrar Sesión -->
             <button onclick="cerrarSesion()" 
                     class="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-full border border-red-900/50 text-red-400 hover:text-white hover:bg-red-600/20 transition-all duration-150 ease-in-out group active:scale-90 focus:outline-none cursor-pointer" 
                     title="Cerrar Sesión">
                 <i class="fa-solid fa-right-from-bracket text-base md:text-lg group-hover:scale-110 transition-transform"></i>
             </button>
         </nav>
+
     </header>
 
     <main class="flex-grow w-full h-[calc(100vh-5rem)] overflow-hidden">
