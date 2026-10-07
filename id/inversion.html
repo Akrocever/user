@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inversión</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Supabase JS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Script de Validación de Sesión y Protección -->
+  <script>
+    const supabaseUrl = 'https://atiihfgjbpvtjglestyw.supabase.co'; 
+    const supabaseKey = 'sb_publishable_CpzuF8Op8fYh_9znf-tHXg_Ba9xNMnP'; 
+    const URL_LOGIN   = 'https://akrocever.github.io/user/login.html';
+
+    async function protegerSubpagina() {
+      // 1. Evitar que la subpágina se abra fuera del iframe
+      if (window === window.top) {
+        window.top.location.href = URL_LOGIN;
+        return;
+      }
+
+      // 2. Verificar que la librería de Supabase esté disponible
+      if (!window.supabase || !window.supabase.createClient) {
+        window.top.location.href = URL_LOGIN;
+        return;
+      }
+
+      const clientSupabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+      try {
+        const { data: { session }, error } = await clientSupabase.auth.getSession();
+
+        if (error || !session) {
+          // Si no hay sesión de Supabase iniciada, enviar a Login fuera del iframe
+          window.top.location.href = URL_LOGIN;
+        } else {
+          // Si el usuario está autenticado, mostrar el contenido
+          document.body.style.display = 'block';
+        }
+      } catch (err) {
+        console.error('Error al validar sesión:', err);
+        window.top.location.href = URL_LOGIN;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', protegerSubpagina);
+  </script>
+  
+    <style>
+        body { font-family: 'Lexend', sans-serif; }
+        .font-orbitron { font-family: 'Orbitron', sans-serif; }
+    </style>
+</head>
+
+<body style="display: none;">
+    
+<!-- Padding superior para dejar espacio al encabezado fijo (h-60px) -->
+<body class="bg-gray-100 min-h-screen flex flex-col pt-15">
+
+    <!-- Encabezado en Gris claro (bg-gray-200) fijo en la parte superior -->
+    <header class="bg-gray-200 text-gray-800 fixed top-0 left-0 right-0 h-[60px] shadow-md z-50 px-3 md:px-6 flex items-center justify-between border-b border-gray-300">
+
+        <!-- Título al lado izquierdo en fuente Orbitron -->
+        <div class="flex flex-col justify-center font-orbitron leading-tight text-gray-900 select-none mr-2">
+            <span class="text-xs md:text-sm font-extrabold tracking-wider uppercase text-[#3f94c2]">
+                Mi inversión
+            </span>
+            <span class="text-[10px] md:text-xs font-semibold tracking-normal text-gray-600 capitalize">
+                Publicidad en circulación
+            </span>
+        </div>
+
+        <!-- Menú de navegación con botones -->
+        <nav class="flex items-center space-x-1.5 md:space-x-4 overflow-x-auto py-1">
+            
+            <!-- mis pagos -->
+            <a href="https://akrocever.github.io/user/id/ganancias-usd.html" target="contenedor-virtual" 
+               class="flex items-center justify-center px-2.5 md:px-5 py-1 md:py-2 text-xs md:text-sm font-semibold rounded-lg border border-gray-400 text-gray-800 bg-white hover:bg-[#3f94c2] hover:text-white hover:border-[#3f94c2] transition-all duration-150 ease-in-out active:scale-95 shadow-sm whitespace-nowrap">
+                Mis pagos
+            </a>
+
+            <!-- invertir-->
+            <a href="https://akrocever.github.io/user/freelance/asistente.html" target="contenedor-virtual" 
+               class="flex items-center justify-center px-2.5 md:px-5 py-1 md:py-2 text-xs md:text-sm font-semibold rounded-lg border border-gray-400 text-gray-800 bg-white hover:bg-[#3f94c2] hover:text-white hover:border-[#3f94c2] transition-all duration-150 ease-in-out active:scale-95 shadow-sm whitespace-nowrap">
+                Invertir
+            </a>
+
+        </nav>
+    </header>
+
+    <!-- Contenedor Principal con el iframe dinámico -->
+    <main class="flex-grow w-full h-[calc(100vh-60px)] overflow-hidden">
+        <iframe name="contenedor-virtual" src="https://akrocever.github.io/user/id/inversion-usd.html" class="w-full h-full border-none" title="Contenido de Oficina Virtual"></iframe>
+    </main>
+
+</body>
+</html>
