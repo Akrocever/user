@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- Supabase JS SDK -->
+    <!-- Supabase JS SDK -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <!-- Script de Validación de Sesión y Protección -->
@@ -62,18 +62,33 @@
       -moz-osx-font-smoothing: grayscale;
     }
 
+    html, body {
+      width: 100%;
+      overflow-x: hidden;
+    }
+
     body {
       background: #ffffff;
       color: #1e293b;
       min-height: 100vh;
-      padding: 8px 16px 16px 16px; /* <-- Cambia esto (Arriba, Derecha, Abajo, Izquierda) */
+      padding: 8px 16px 16px 16px;
       font-family: 'Orbitron', sans-serif;
-      overflow-x: hidden;
     }
 
     .container {
       max-width: 1400px;
       margin: 0 auto;
+    }
+
+    :root {
+      --color-borde: #3F93C0;
+      --color-header: #3F93C0;
+      --turquesa: #2ccccc;
+    }
+
+    /* ── Clase útil para ocultar elementos ── */
+    .oculto {
+      display: none !important;
     }
 
     /* ── Animación de brillo compartida ── */
@@ -179,16 +194,23 @@
       color: #64748b;
     }
 
-    :root {
-      --color-borde: #3F93C0;
-      --color-header: #3F93C0;
-      --verde: #FFD700;
-      --turquesa: #2ccccc;
+    /* ── Cuadrícula para los Planes de Inversión (2 columnas en PC) ── */
+    .plans-grid {
+      display: grid;
+      gap: 20px;
+      max-width: 1400px;
+      margin: 0 auto 40px auto;
+    }
+
+    @media (min-width: 768px) {
+      .plans-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
     }
 
     .investment-card {
-      max-width: 360px;
-      margin: 0 auto 40px;
+      width: 100%;
+      margin: 0;
       padding: 14px;
       background: white;
       border-radius: 10px;                    
@@ -209,27 +231,95 @@
         0 12px 24px rgba(0,0,0,0.12);
     }
 
-    .card-container {
-      font-family: 'Orbitron', sans-serif;
-      padding: 16px;
-      max-width: 360px;
-      margin: 0 auto 48px;
-      background: transparent;
-      color: #000;
-      border-radius: 10px;
-      box-shadow: 
-        0 0 0 4px #3e8fb8,
-        0 0 10px 4px rgba(62, 143, 184, 0.4),
-        0 0 24px 8px rgba(62, 143, 184, 0.25);
+    .investment-header {
+      background: var(--color-header);
+      color: white;
+      text-align: center;
+      font-size: 20px;
+      padding: 12px;
+      font-weight: 800;
+      margin: -14px -14px 16px -14px;
+      position: relative;
+      overflow: hidden;
+      border-radius: 8px 8px 0 0;
+    }
+
+    .investment-header::before {
+      content: '';
+      position: absolute;
+      inset: -50% -120% -50% -120%;
+      background: linear-gradient(90deg, transparent 20%, rgba(255,255,255,0.45) 45%, rgba(255,255,255,0.25) 50%, transparent 80%);
+      animation: shineHorizontal 6s linear infinite;
+      pointer-events: none;
+      transform: skewX(-15deg);
+    }
+
+    .row { display: flex; justify-content: space-between; margin-top: 14px; font-size: 14px; }
+    .estado { display: flex; align-items: center; gap: 6px; }
+    
+    .dot { width: 12px; height: 12px; border-radius: 50%; }
+
+    .bar-wrapper { position: relative; margin: 16px 0; }
+    .bar-container { display: flex; height: 18px; overflow: hidden; border-radius: 4px; }
+    .bar-main { width: 0%; transition: width 0.6s ease; }
+    .bar-blue {
+      background: repeating-linear-gradient(90deg, var(--turquesa), var(--turquesa) 5px, transparent 5px, transparent 9px);
+      width: 100%;
+      transition: width 0.6s ease;
+    }
+    .progress-dot {
+      position: absolute;
+      top: 50%;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: left 0.6s ease;
+      box-shadow: 0 0 0 3px white, 0 0 6px rgba(0,0,0,0.25);
+    }
+
+    .fecha { text-align: center; font-size: 13px; margin-bottom: 12px; color: #444; }
+
+    .detalles { font-family: 'Lexend', sans-serif; font-size: 13px; }
+    .detalles div { display: flex; justify-content: space-between; margin: 6px 0; }
+    .detalles strong { font-size: 14px; }
+
+    /* ── Cuadrícula para el Control de Capital con Estilo de Tarjeta ── */
+    .capital-grid {
+      display: grid;
+      gap: 20px;
+      max-width: 1400px;
+      margin: 0 auto 48px auto;
+    }
+
+    @media (min-width: 768px) {
+      .capital-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
     }
 
     .section {
-      border: 2px solid #3b8fc4;
-      padding: 20px 12px;
-      margin-bottom: 16px;
+      padding: 20px 14px;
+      margin-bottom: 0;
       text-align: center;
-      border-radius: 8px;
-      background: rgba(255,255,255,0.85);
+      background: white;
+      border-radius: 10px;
+      box-shadow: 
+        0 0 0 4px #3e8fb8,                    
+        0 0 10px 4px rgba(62, 143, 184, 0.4), 
+        0 0 24px 8px rgba(62, 143, 184, 0.25),
+        0 8px 16px rgba(0,0,0,0.08);          
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      overflow: hidden;
+    }
+
+    .section:hover {
+      transform: translateY(-4px);
+      box-shadow: 
+        0 0 0 5px #3e8fb8,
+        0 0 15px 6px rgba(62, 143, 184, 0.55),
+        0 0 30px 10px rgba(62, 143, 184, 0.35),
+        0 12px 24px rgba(0,0,0,0.12);
     }
 
     .title {
@@ -237,29 +327,14 @@
       font-weight: 800;
       color: #ffffff;
       background-color: #3b8fc4;
-      padding: 8px;
-      margin: -20px -12px 14px -12px;
-      border-radius: 6px 6px 0 0;
+      padding: 10px;
+      margin: -20px -14px 14px -14px;
+      border-radius: 8px 8px 0 0;
     }
 
     .completed-section {
       margin-top: 48px; 
       text-align: center;
-    }
-
-    .completed-section .section-title {
-      font-size: 18px;
-      font-weight: 700;
-      letter-spacing: 1.0px;
-      color: #1e293b;
-      margin-bottom: 24px;
-      text-transform: uppercase;
-    }
-
-    .completed-container {
-      max-width: 1000px;
-      margin: 0 auto;
-      padding: 0 10px;
     }
 
     .completed-card {
@@ -306,6 +381,12 @@
       transform: skewX(-15deg);
     }
 
+    .table-wrapper {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
     .completed-table {
       width: 100%;
       border-collapse: collapse;
@@ -343,71 +424,8 @@
       }
     }
 
-    .investment-header {
-      background: var(--color-header);
-      color: white;
-      text-align: center;
-      font-size: 20px;
-      padding: 12px;
-      font-weight: 800;
-      margin: -14px -14px 16px -14px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .investment-header::before {
-      content: '';
-      position: absolute;
-      inset: -50% -120% -50% -120%;
-      background: linear-gradient(90deg, transparent 20%, rgba(255,255,255,0.45) 45%, rgba(255,255,255,0.25) 50%, transparent 80%);
-      animation: shineHorizontal 6s linear infinite;
-      pointer-events: none;
-      transform: skewX(-15deg);
-    }
-
-    .row { display: flex; justify-content: space-between; margin-top: 14px; font-size: 14px; }
-    .estado { display: flex; align-items: center; gap: 6px; }
-    .dot { width: 12px; height: 12px; background: var(--verde); border-radius: 50%; }
-
-    .bar-wrapper { position: relative; margin: 16px 0; }
-    .bar-container { display: flex; height: 18px; overflow: hidden; border-radius: 4px; }
-    .bar-green { background: var(--verde); width: 0%; transition: width 0.6s ease; }
-    .bar-blue {
-      background: repeating-linear-gradient(90deg, var(--turquesa), var(--turquesa) 5px, transparent 5px, transparent 9px);
-      width: 100%;
-      transition: width 0.6s ease;
-    }
-    .progress-dot {
-      position: absolute;
-      top: 50%;
-      width: 14px;
-      height: 14px;
-      background: var(--verde);
-      border-radius: 50%;
-      transform: translate(-50%, -50%);
-      transition: left 0.6s ease;
-      box-shadow: 0 0 0 3px white, 0 0 6px rgba(0,0,0,0.25);
-    }
-
-    .fecha { text-align: center; font-size: 13px; margin-bottom: 12px; color: #444; }
-
-    .detalles { font-family: 'Lexend', sans-serif; font-size: 13px; }
-    .detalles div { display: flex; justify-content: space-between; margin: 6px 0; }
-    .detalles strong { font-size: 14px; }
-
     @keyframes fadeUp {
       to { opacity: 1; transform: translateY(0); }
-    }
-
-    html, body {
-      width: 100%;
-      overflow-x: hidden;
-    }
-
-    .table-wrapper {
-      width: 100%;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
     }
   </style>
 </head>
@@ -473,44 +491,197 @@
     </div>
   </div>
 
-  <!-- Sección MIS INVERSIONES -->
-  <h2 class="section-title">PLAN DE INVERSIÓN</h2>
+  <!-- Sección CAMPAÑAS PUBLICITARIAS -->
+  <h2 class="section-title">CAMPAÑAS PUBLICITARIAS</h2>
 
-  <div class="investment-card">
-    <div class="investment-header" id="planTitulo"></div>
-    <div class="row">
-      <div>
-        <div>Progreso</div>
-        <div class="estado">
-          <div class="dot"></div>
-          <span id="estado"></span>
+  <div class="plans-grid">
+    <!-- Plan 1 -->
+    <div class="investment-card">
+      <div class="investment-header" id="planTitulo1">EMPRESA</div>
+<img src="https://i.ibb.co/cKP8Kd5s/Picsart-26-10-10-01-15-51-826.png" 
+             style="width: 100%; height: auto; display: block;">
+      <div class="row">
+        <div>
+          <div>Progreso</div>
+          <div class="estado">
+            <div class="dot" id="dot1"></div>
+            <span id="estado1">Activar</span>
+          </div>
+        </div>
+        <div style="text-align:right">
+          <div>Rentabilidad</div>
+          <strong id="rentabilidad1">$0,00 USD</strong>
         </div>
       </div>
-      <div style="text-align:right">
-        <div>Rentabilidad</div>
-        <strong id="rentabilidad"></strong>
+      <div class="bar-wrapper">
+        <div class="bar-container">
+          <div class="bar-main" id="barMain1" style="width: 0%;"></div>
+          <div class="bar-blue" id="barBlue1" style="width: 100%;"></div>
+        </div>
+        <div class="progress-dot" id="progressDot1" style="left: 0%;"></div>
+      </div>
+      <div class="fecha">Fecha de inicio — <span id="fecha1">••/••/2026</span></div>
+      <div class="detalles">
+        <div><span>Ganancia</span><span id="ganancia1">(50% de utilidad) $5.00 USD</span></div>
+        <div><strong>Total a recibir</strong><strong id="total1">$15.00 USD</strong></div>
       </div>
     </div>
-    <div class="bar-wrapper">
-      <div class="bar-container">
-        <div class="bar-green" id="barGreen"></div>
-        <div class="bar-blue" id="barBlue"></div>
+
+    <!-- Plan 2 -->
+    <div class="investment-card oculto">
+      <div class="investment-header" id="planTitulo2">EMPRESA</div>
+      <div class="row">
+        <div>
+          <div>Progreso</div>
+          <div class="estado">
+            <div class="dot" id="dot2"></div>
+            <span id="estado2">Activar</span>
+          </div>
+        </div>
+        <div style="text-align:right">
+          <div>Rentabilidad</div>
+          <strong id="rentabilidad2">$0,00 USD</strong>
+        </div>
       </div>
-      <div class="progress-dot" id="progressDot"></div>
+      <div class="bar-wrapper">
+        <div class="bar-container">
+          <div class="bar-main" id="barMain2" style="width: 0%;"></div>
+          <div class="bar-blue" id="barBlue2" style="width: 100%;"></div>
+        </div>
+        <div class="progress-dot" id="progressDot2" style="left: 0%;"></div>
+      </div>
+      <div class="fecha">Fecha de inicio — <span id="fecha2">••/••/2026</span></div>
+      <div class="detalles">
+        <div><span>Ganancia</span><span id="ganancia2">(50% de utilidad) $5.00 USD</span></div>
+        <div><strong>Total a recibir</strong><strong id="total2">$15.00 USD</strong></div>
+      </div>
     </div>
-    <div class="fecha">Fecha de inicio — <span id="fecha"></span></div>
-    <div class="detalles">
-      <div><span>% de Utilidad</span><span id="utilidad"></span></div>
-      <div><span>Rentabilidad diaria</span><span id="diaria"></span></div>
-      <div><span>Periodo</span><span id="periodo"></span></div>
-      <div><span>Ganancia</span><span id="ganancia"></span></div>
-      <div><strong>Total a recibir</strong><strong id="total"></strong></div>
+
+    <!-- Plan 3 -->
+    <div class="investment-card oculto">
+      <div class="investment-header" id="planTitulo3">EMPRESA</div>
+      <div class="row">
+        <div>
+          <div>Progreso</div>
+          <div class="estado">
+            <div class="dot" id="dot3"></div>
+            <span id="estado3">Activar</span>
+          </div>
+        </div>
+        <div style="text-align:right">
+          <div>Rentabilidad</div>
+          <strong id="rentabilidad3">$0,00 USD</strong>
+        </div>
+      </div>
+      <div class="bar-wrapper">
+        <div class="bar-container">
+          <div class="bar-main" id="barMain3" style="width: 0%;"></div>
+          <div class="bar-blue" id="barBlue3" style="width: 100%;"></div>
+        </div>
+        <div class="progress-dot" id="progressDot3" style="left: 0%;"></div>
+      </div>
+      <div class="fecha">Fecha de inicio — <span id="fecha3">••/••/2026</span></div>
+      <div class="detalles">
+        <div><span>Ganancia</span><span id="ganancia3">(50% de utilidad) $5.00 USD</span></div>
+        <div><strong>Total a recibir</strong><strong id="total3">$15.00 USD</strong></div>
+      </div>
+    </div>
+
+    <!-- Plan 4 -->
+    <div class="investment-card oculto">
+      <div class="investment-header" id="planTitulo4">EMPRESA</div>
+      <div class="row">
+        <div>
+          <div>Progreso</div>
+          <div class="estado">
+            <div class="dot" id="dot4"></div>
+            <span id="estado4">Activar</span>
+          </div>
+        </div>
+        <div style="text-align:right">
+          <div>Rentabilidad</div>
+          <strong id="rentabilidad4">$0,00 USD</strong>
+        </div>
+      </div>
+      <div class="bar-wrapper">
+        <div class="bar-container">
+          <div class="bar-main" id="barMain4" style="width: 0%;"></div>
+          <div class="bar-blue" id="barBlue4" style="width: 100%;"></div>
+        </div>
+        <div class="progress-dot" id="progressDot4" style="left: 0%;"></div>
+      </div>
+      <div class="fecha">Fecha de inicio — <span id="fecha4">••/••/2026</span></div>
+      <div class="detalles">
+        <div><span>Ganancia</span><span id="ganancia4">(50% de utilidad) $5.00 USD</span></div>
+        <div><strong>Total a recibir</strong><strong id="total4">$15.00 USD</strong></div>
+      </div>
+    </div>
+
+    <!-- Plan 5 (Oculto por defecto con la clase "oculto") -->
+    <div class="investment-card oculto">
+      <div class="investment-header" id="planTitulo5">EMPRESA</div>
+      <div class="row">
+        <div>
+          <div>Progreso</div>
+          <div class="estado">
+            <div class="dot" id="dot5"></div>
+            <span id="estado5">Activar</span>
+          </div>
+        </div>
+        <div style="text-align:right">
+          <div>Rentabilidad</div>
+          <strong id="rentabilidad5">$0,00 USD</strong>
+        </div>
+      </div>
+      <div class="bar-wrapper">
+        <div class="bar-container">
+          <div class="bar-main" id="barMain5" style="width: 0%;"></div>
+          <div class="bar-blue" id="barBlue5" style="width: 100%;"></div>
+        </div>
+        <div class="progress-dot" id="progressDot5" style="left: 0%;"></div>
+      </div>
+      <div class="fecha">Fecha de inicio — <span id="fecha5">••/••/2026</span></div>
+      <div class="detalles">
+        <div><span>Ganancia</span><span id="ganancia5">(50% de utilidad) $5.00 USD</span></div>
+        <div><strong>Total a recibir</strong><strong id="total5">$15.00 USD</strong></div>
+      </div>
+    </div>
+
+    <!-- Plan 6 (Oculto por defecto con la clase "oculto") -->
+    <div class="investment-card oculto">
+      <div class="investment-header" id="planTitulo6">EMPRESA</div>
+      <div class="row">
+        <div>
+          <div>Progreso</div>
+          <div class="estado">
+            <div class="dot" id="dot6"></div>
+            <span id="estado6">Activar</span>
+          </div>
+        </div>
+        <div style="text-align:right">
+          <div>Rentabilidad</div>
+          <strong id="rentabilidad6">$0,00 USD</strong>
+        </div>
+      </div>
+      <div class="bar-wrapper">
+        <div class="bar-container">
+          <div class="bar-main" id="barMain6" style="width: 0%;"></div>
+          <div class="bar-blue" id="barBlue6" style="width: 100%;"></div>
+        </div>
+        <div class="progress-dot" id="progressDot6" style="left: 0%;"></div>
+      </div>
+      <div class="fecha">Fecha de inicio — <span id="fecha6">••/••/2026</span></div>
+      <div class="detalles">
+        <div><span>Ganancia</span><span id="ganancia6">(50% de utilidad) $5.00 USD</span></div>
+        <div><strong>Total a recibir</strong><strong id="total6">$15.00 USD</strong></div>
+      </div>
     </div>
   </div>
 
+  <!-- Sección CONTROL DE CAPITAL -->
   <h2 class="section-title">CONTROL DE CAPITAL</h2>
 
-  <div class="card-container">
+  <div class="capital-grid">
     <div class="section">
       <div class="title">Capital actual en movimiento:</div>
       <div>
@@ -612,33 +783,46 @@
 </footer>
 
 <script>
-  const planNombre       = "PLAN";
-  const montoActual      = 0.00;
-  const montoMaximo      = 37.50;
-  const utilidadPorc     = "50%";
-  const rentabilidadDiaria = "$1.25 USD";
-  const periodo          = "30 días";
-  const ganancia         = "$12.50 USD";
-  const totalRecibir     = "$37.50 USD";
-  const fechaInicio      = "••/••/2026";
+  const plan1 = { nombre: "EMPRESA", montoActual: 0.00, montoMaximo: 15.00, estado: "Activar", colorBarra: "#FFD700", fecha: "--/--/2026", ganancia: "(50% de utilidad) $5.00 USD", total: "$15.00 USD" };
+  const plan2 = { nombre: "EMPRESA", montoActual: 0.00, montoMaximo: 15.00, estado: "Activar", colorBarra: "#FFD700", fecha: "--/--/2026", ganancia: "(50% de utilidad) $5.00 USD", total: "$15.00 USD" };
+  const plan3 = { nombre: "EMPRESA 3", montoActual: 0.00, montoMaximo: 15.00, estado: "Activar", colorBarra: "#FFD700", fecha: "--/--/2026", ganancia: "(50% de utilidad) $5.00 USD", total: "$15.00 USD" };
+  const plan4 = { nombre: "EMPRESA 4", montoActual: 0.00, montoMaximo: 15.00, estado: "Activar", colorBarra: "#FFD700", fecha: "--/--/2026", ganancia: "(50% de utilidad) $5.00 USD", total: "$15.00 USD" };
+  const plan5 = { nombre: "EMPRESA 5", montoActual: 0.00, montoMaximo: 15.00, estado: "Activar", colorBarra: "#FFD700", fecha: "--/--/2026", ganancia: "(50% de utilidad) $5.00 USD", total: "$15.00 USD" };
+  const plan6 = { nombre: "EMPRESA 6", montoActual: 0.00, montoMaximo: 15.00, estado: "Activar", colorBarra: "#FFD700", fecha: "--/--/2026", ganancia: "(50% de utilidad) $5.00 USD", total: "$15.00 USD" };
 
-  document.getElementById("planTitulo").textContent = planNombre;
-  document.getElementById("estado").textContent = "Activar";
-  document.getElementById("rentabilidad").textContent = `$${montoActual.toFixed(2).replace('.', ',')} USD`;
-  document.getElementById("fecha").textContent = fechaInicio;
-  document.getElementById("utilidad").textContent = utilidadPorc;
-  document.getElementById("diaria").textContent = rentabilidadDiaria;
-  document.getElementById("periodo").textContent = periodo;
-  document.getElementById("ganancia").textContent = ganancia;
-  document.getElementById("total").textContent = totalRecibir;
+  function renderizarPlan(id, datos) {
+    const tituloElement = document.getElementById(`planTitulo${id}`);
+    if (!tituloElement) return; // Si la tarjeta no existe o está en blanco, se detiene para evitar errores
 
-  let progreso = montoActual / montoMaximo;
-  progreso = Math.min(Math.max(progreso, 0), 1);
-  const porcentaje = progreso * 100;
+    let progreso = datos.montoActual / datos.montoMaximo;
+    progreso = Math.min(Math.max(progreso, 0), 1);
+    const porcentaje = progreso * 100;
 
-  document.getElementById("barGreen").style.width = porcentaje + "%";
-  document.getElementById("barBlue").style.width = (100 - porcentaje) + "%";
-  document.getElementById("progressDot").style.left = porcentaje + "%";
+    tituloElement.textContent = datos.nombre;
+    document.getElementById(`estado${id}`).textContent = datos.estado;
+    document.getElementById(`rentabilidad${id}`).textContent = `$${datos.montoActual.toFixed(2).replace('.', ',')} USD`;
+    document.getElementById(`fecha${id}`).textContent = datos.fecha;
+    document.getElementById(`ganancia${id}`).textContent = datos.ganancia;
+    document.getElementById(`total${id}`).textContent = datos.total;
+
+    document.getElementById(`barMain${id}`).style.width = porcentaje + "%";
+    document.getElementById(`barMain${id}`).style.background = datos.colorBarra;
+    
+    document.getElementById(`barBlue${id}`).style.width = (100 - porcentaje) + "%";
+    
+    document.getElementById(`progressDot${id}`).style.left = porcentaje + "%";
+    document.getElementById(`progressDot${id}`).style.background = datos.colorBarra;
+    
+    document.getElementById(`dot${id}`).style.background = datos.colorBarra;
+  }
+
+  // Ejecutamos de forma segura para todos los planes
+  renderizarPlan(1, plan1);
+  renderizarPlan(2, plan2);
+  renderizarPlan(3, plan3);
+  renderizarPlan(4, plan4);
+  renderizarPlan(5, plan5);
+  renderizarPlan(6, plan6);
 </script>
 
 </body>
