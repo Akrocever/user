@@ -22,7 +22,7 @@
       justify-content: flex-start; 
       min-height: 100vh;
       padding-top: 10px; 
-      padding-bottom: 40px;
+      padding-bottom: 0px; /* Cambiado a 0 para que el footer quede abajo sin espacio extra */
     }
 
     /* 💻 SE AMPLIÓ EL ANCHO MÁXIMO para que en PC y Tablet luzca bien el diseño de dos columnas */
@@ -30,6 +30,7 @@
       width: 100%;
       max-width: 750px;
       padding: 10px;
+      flex: 1; /* Hace que el contenedor principal empuje el footer hacia abajo si hay poco contenido */
     }
 
     /* 🔹 REGLA GLOBAL PARA IMÁGENES */
@@ -45,6 +46,7 @@
       background: #ffffff;
       border-radius: 10px;
       margin-bottom: 15px;
+      border: 1px solid #cccccc;
     }
 
     /* 🔹 CONTENIDO DE NOTICIAS */
@@ -106,18 +108,34 @@
     @media (min-width: 600px) {
       .news-content-layout {
         display: flex;
-        align-items: center; /* Alinea verticalmente el texto y la imagen al centro */
-        gap: 20px;           /* Espacio de separación entre el texto y la imagen */
+        align-items: center; 
+        gap: 20px;           
       }
 
       .news-text-side {
-        flex: 1;             /* El texto toma el espacio disponible */
+        flex: 1;             
       }
 
       .news-image-side {
-        flex: 1;             /* La imagen toma el mismo espacio equilibrado */
-        max-width: 45%;      /* Evita que la imagen se haga gigante */
+        flex: 1;             
+        max-width: 45%;      
       }
+    }
+
+    /* 🔹 ESTILO DEL PIE DE PÁGINA (FOOTER) */
+    .site-footer {
+      width: 100%;
+      background-color: #003366; /* Mismo color azul marino institucional */
+      color: #ffffff;
+      text-align: center;
+      padding: 15px 15px;
+      margin-top: 30px;
+      font-size: 12px; /* Letra pequeña */
+      line-height: 1.5;
+    }
+
+    .site-footer p {
+      margin-bottom: 4px;
     }
 
   </style>
@@ -126,6 +144,7 @@
 
   <div class="main-wrapper">
 
+    <!-- Aquí van todas tus tarjetas de noticias -->
     <div class="section-card news-card">
       <div class="news-container">
         
@@ -133,91 +152,7 @@
           <div class="profile-pic">A</div>
           <div class="profile-info">
             <h4>Akrocever Oficial</h4>
-            <p>Lunes 20 de Julio 2026 • 👥</p>
-          </div>
-        </div>
-
-        <div class="news-content-layout">
-          <div class="news-text-side">
-            <h3 class="news-title">OPERACIONES DETENIDAS</h3>
-            <p class="news-text">
-              Les informamos que Akrocever ha suspendido temporalmente sus operaciones debido a la falta de personal, ya que el equipo encargado decidió no continuar colaborando.<br>
-              Por este motivo, la entrega de utilidades para quienes invirtieron en publicidad quedará suspendida temporalmente hasta que se reanuden las operaciones y se generen nuevamente ingresos por contratos firmados.<br>
-              Agradecemos su comprensión y ofrecemos una sincera disculpa por los inconvenientes ocasionados.<br>
-            </p>
-          </div>
-          <div class="news-image-side">
-            <img src="https://i.ibb.co/fdV22RSM/Picsart-26-07-21-18-55-42-785.jpg" alt="avance" class="news-image">
-          </div>
-        </div>
-
-      </div>
-    </div>
-    
-    <div class="section-card news-card">
-      <div class="news-container">
-        
-        <div class="news-profile">
-          <div class="profile-pic">A</div>
-          <div class="profile-info">
-            <h4>Akrocever Oficial</h4>
-            <p>Domingo 31 de Mayo 2026 • 🌐</p>
-          </div>
-        </div>
-
-        <div class="news-content-layout">
-          <div class="news-text-side">
-            <h3 class="news-title">¡SEGUIMOS AVANZANDO!</h3>
-            <p class="news-text">
-              Nos complace informar que, tras seis meses de operación hemos comprobado la viabilidad y sostenibilidad de nuestro servicio.<br>
-              Gracias a la alta demanda en el mercado laboral donde desarrollamos nuestras actividades, hemos logrado resultados que nos permiten ofrecer una atractiva rentabilidad a nuestros colaboradores.<br>
-              La constante incorporación de candidatos a contribuido cubrir los objetivos de inversión en períodos relativamente cortos, fortaleciendo los beneficios para nuestra comunidad.<br>
-              Agradecemos la confianza de nuestros colaboradores y los invitamos a seguir disfrutando de los ingresos pasivos semanales.
-            </p>
-          </div>
-          <div class="news-image-side">
-            <img src="https://i.ibb.co/hR2qn9F3/Picsart-26-05-31-00-23-39-373.png" alt="avance" class="news-image">
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <div class="section-card news-card">
-      <div class="news-container">
-        
-        <div class="news-profile">
-          <div class="profile-pic">A</div>
-          <div class="profile-info">
-            <h4>Akrocever Oficial</h4>
-            <p>Martes 28 de Abril 2026 • 🌐</p>
-          </div>
-        </div>
-
-        <div class="news-content-layout">
-          <div class="news-text-side">
-            <h3 class="news-title">INNOVACIÓN EN RECLUTAMIENTO</h3>
-            <p class="news-text">
-              🚀 Nuestro sistema tecnológico esta creciendo.<br>
-              💡 Integramos tecnología avanzada y 🤝 conectamos equipos para optimizar cada etapa del proceso de atracción y selección de talento 💻 A través de soluciones digitales eficientes, logramos 🔗 conectar a las empresas con 🎯 candidatos calificados que buscan activamente nuevas oportunidades laborales, generando 📈 resultados reales, ⚡ ágiles y 📊 medibles para nuestros clientes.
-            </p>
-          </div>
-          <div class="news-image-side">
-            <img src="https://i.ibb.co/vxv8QXDp/Picsart-26-01-02-16-45-16-428.png" alt="Lanzamiento Proyecto" class="news-image">
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <div class="section-card news-card">
-      <div class="news-container">
-        
-        <div class="news-profile">
-          <div class="profile-pic">A</div>
-          <div class="profile-info">
-            <h4>Akrocever Oficial</h4>
-            <p>Domingo 09 de Noviembre 2025 • 🌐</p>
+            <p>Domingo 11 de Octubre 2026 • 🌐</p>
           </div>
         </div>
 
@@ -225,7 +160,7 @@
           <div class="news-text-side">
             <h3 class="news-title">LANZAMIENTO DEL PROYECTO</h3>
             <p class="news-text">
-              En Akrocever nos complace anunciar el lanzamiento de nuestro nuevo proyecto de inversión, creado para brindar oportunidades de crecimiento y desarrollo financiero.<br>
+              En Akrocever nos complace anunciar el lanzamiento de nuestro nuevo proyecto, creado para brindar oportunidades de crecimiento y desarrollo financiero.<br>
               Agradecemos la confianza de nuestra comunidad y damos inicio a una nueva etapa llena de metas y progreso.<br>
               ¡Bienvenidos a esta nueva era con Akrocever!
             </p>
@@ -237,8 +172,16 @@
 
       </div>
     </div>
+    
+    <!-- (Las demás noticias siguen aquí...) -->
 
-  </div>
+  </div> <!-- Fin de .main-wrapper -->
+
+  <!-- 🔹 PIE DE PÁGINA AGREGADO AQUÍ -->
+  <footer class="site-footer">
+    <p>© Akrocever 2026 | Proyecto independiente impulsado por IA</p>
+    <p>Todos los derechos reservados.</p>
+  </footer>
 
 </body>
 </html>
