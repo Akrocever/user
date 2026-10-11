@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vacantes Disponibles - Monterrey</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+
+    <!-- Supabase JS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Script de Validación de Sesión y Protección -->
+  <script>
+    const supabaseUrl = 'https://atiihfgjbpvtjglestyw.supabase.co'; 
+    const supabaseKey = 'sb_publishable_CpzuF8Op8fYh_9znf-tHXg_Ba9xNMnP'; 
+    const URL_LOGIN   = 'https://akrocever.github.io/user/login.html';
+
+    async function protegerSubpagina() {
+      // 1. Evitar que la subpágina se abra fuera del iframe
+      if (window === window.top) {
+        window.top.location.href = URL_LOGIN;
+        return;
+      }
+
+      // 2. Verificar que la librería de Supabase esté disponible
+      if (!window.supabase || !window.supabase.createClient) {
+        window.top.location.href = URL_LOGIN;
+        return;
+      }
+
+      const clientSupabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+      try {
+        const { data: { session }, error } = await clientSupabase.auth.getSession();
+
+        if (error || !session) {
+          // Si no hay sesión de Supabase iniciada, enviar a Login fuera del iframe
+          window.top.location.href = URL_LOGIN;
+        } else {
+          // Si el usuario está autenticado, mostrar el contenido
+          document.body.style.display = 'block';
+        }
+      } catch (err) {
+        console.error('Error al validar sesión:', err);
+        window.top.location.href = URL_LOGIN;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', protegerSubpagina);
+  </script>
+
+  <style>
+    body {
+      font-family: 'Lexend', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+      color: #333;
+      line-height: 1.2;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 10px;
+    }
+
+    .dashboard {
+      display: grid;
+      grid-template-columns: repeat(1, 1fr);
+      gap: 30px;
+      max-width: 1200px;
+      margin: 30px auto 40px auto;
+      padding: 0 10px;
+    }
+
+    .card {
+      border: 4px solid #3e8fb8;
+      border-radius: 10px;
+      background: white;
+      overflow: hidden;
+      box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUp 0.7s ease-out forwards;
+    }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-header {
+      background: #3e8fb8;
+      color: white;
+      padding: 10px 20px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-body {
+      padding: 15px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      text-align: center;
+    }
+
+    .vacantes {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .vacantes-box {
+      background: #e8eef4;
+      color: #222;
+      padding: 10px 15px;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      line-height: 1.4;
+      text-align: center;
+      width: 100%;
+      max-width: 320px;
+    }
+
+    .vacantes-box div {
+      margin-bottom: 4px;
+    }
+
+    .vacantes-box div:last-child {
+      margin-bottom: 0;
+    }
+
+    .pagina-titulo {
+      font-family: 'Orbitron', sans-serif;
+      color: #003366;
+      font-size: 1rem;
+      font-weight: 500;
+      text-align: center;
+      margin-top: 20px;
+      margin-bottom: 10px;
+    }
+
+    /* Estilos para el cuadro de pago SPEI ubicado al final */
+    .spei-container {
+      max-width: 800px;
+      margin: 40px auto 30px auto;
+      padding: 0 10px;
+    }
+
+    .spei-box {
+      background-color: #e0e0e0;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      text-align: center;
+    }
+
+    .spei-box p {
+      margin: 0 0 12px 0;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      color: #222;
+      text-align: left;
+    }
+
+    .spei-box p strong {
+      color: #003366;
+    }
+
+    .btn-whatsapp {
+      display: inline-block;
+      background-color: #25d366;
+      color: white;
+      text-decoration: none;
+      padding: 8px 16px;
+      border-radius: 5px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-top: 10px;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-whatsapp:hover {
+      background-color: #1ebd59;
+    }
+
+    /* RESPONSIVE general */
+    @media (min-width: 640px) {
+      .dashboard { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (min-width: 1024px) {
+      .dashboard { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    footer {
+        text-align: center;
+        padding: 0.7rem 0.7rem;
+        background: #003366;
+        color: #ffffff;
+    }
+
+    footer p { 
+        margin-bottom: 0.5rem; 
+        opacity: 0.8; 
+        font-size: 0.70rem; 
+    }
+  </style>
+</head>
+
+  <!-- El cuerpo inicia oculto para evitar mostrar información antes de validar la sesión -->
+<body style="display: none;">
+
+  <div class="container">
+
+   <div class="pagina-titulo">CAMPAÑAS PUBLICITARIAS</div>
+
+    <div class="dashboard">
+
+     <!-- 1. Aisin-->
+     <div class="card" style="animation-delay: 0.2s;">
+        <div class="card-header">🟢 AISIN</div>
+        <img src="https://i.ibb.co/21jWDZWp/Picsart-26-08-03-11-16-41-781.jpg" 
+             alt="Portada Vacante mfg" 
+             style="width: 100%; height: auto; display: block;">
+        <div class="card-body">
+          <div class="vacantes">
+            <div class="vacantes-box">
+              <strong>$200.00 MXN</strong>
+              <div>Periodo establecido = 15 días</div>
+              <div>Ganancia = $100.00 MXN</div>
+              <strong>Total a recibir = 300.00 MXN</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 2. CEDIS SORIANA -->
+      <div class="card" style="animation-delay: 0.2s;">
+        <div class="card-header">🟢 CEDIS SORIANA</div>
+        <img src="https://i.ibb.co/dJQdLxcT/Picsart-26-08-20-00-02-19-564.jpg" 
+             alt="Portada Vacante ngk" 
+             style="width: 100%; height: auto; display: block;">
+        <div class="card-body">
+          <div class="vacantes">
+            <div class="vacantes-box">
+              <strong>$300.00 MXN</strong>
+              <div>Periodo establecido = 15 días</div>
+              <div>Ganancia = $150.00 MXN</div>
+              <strong>Total a recibir = 450.00 MXN</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. HUSSMANN -->
+      <div class="card" style="animation-delay: 0.2s;">
+        <div class="card-header">🟢 HUSSMANN</div>
+        <img src="https://i.ibb.co/CspNRqGw/Picsart-26-08-08-14-01-53-227.png" 
+             alt="Portada Vacante nidec" 
+             style="width: 100%; height: auto; display: block;">
+        <div class="card-body">
+          <div class="vacantes">
+            <div class="vacantes-box">
+              <strong>$200.00 MXN</strong>
+              <div>Periodo establecido = 15 días</div>
+              <div>Ganancia = $100.00 MXN</div>
+              <strong>Total a recibir = $300.00 MXN</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 4. PIASA -->
+      <div class="card" style="animation-delay: 0.2s;">
+        <div class="card-header">🟢 PIASA</div>
+        <img src="https://i.ibb.co/dwpZWnK3/Picsart-26-08-04-12-04-24-501.jpg" 
+             alt="Portada Vacante omega" 
+             style="width: 100%; height: auto; display: block;">
+        <div class="card-body">
+          <div class="vacantes">
+            <div class="vacantes-box">
+              <strong>$200.00 MXN</strong>
+              <div>Periodo establecido = 15 días</div>
+              <div>Ganancia = $100.00 MXN</div>
+              <strong>Total a recibir = $300.00 MXN</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. TAEHWA -->
+      <div class="card" style="animation-delay: 0.2s;">
+        <div class="card-header">🟢 TAEHWA </div>
+        <img src="https://i.ibb.co/d0QZbV7S/Picsart-26-08-17-22-57-36-263.jpg" 
+             alt="Portada Vacante Pexco" 
+             style="width: 100%; height: auto; display: block;">
+        <div class="card-body">
+          <div class="vacantes">
+            <div class="vacantes-box">
+              <strong>$100.00 MXN</strong>
+              <div>Periodo establecido = 15 días</div>
+              <div>Ganancia = $50.00 MXN</div>
+              <strong>Total a recibir = $150.00 MXN</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Cuadro de fondo gris para el pago SPEI (Ubicado hasta abajo de las tarjetas) -->
+    <div class="spei-container">
+      <div class="spei-box">
+        <p>Para solicitar un plan de publicidad se realiza mediante transferencia SPEI<br>
+        <strong>Número de cuenta:</strong> 4152314192103458<br>
+        <strong>Beneficiario:</strong> José Luis Cruz Santiago<br>
+        <strong>Banco:</strong> BBVA<br>
+        <strong>Concepto:</strong> (importante tu ID de usuario)<br>
+        Enviar su comprobante de pago a Soporte por WhatsApp</p>
+        
+        <a href="https://wa.me/528117967047?text=Hola,%20adjunto%20mi%20comprobante%20de%20pago%20SPEI%20para%20mi%20plan%20de%20publicidad.%20Mi%20ID%20de%20usuario%20es:" class="btn-whatsapp" target="_blank">📲 Enviar a WhatsApp</a>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    <p>© Akrocever 2026 | Proyecto independiente impulsado por IA</p>
+    <p>Todos los derechos reservados.</p>
+  </footer>
+
+</body>
+</html>
