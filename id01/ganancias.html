@@ -308,31 +308,60 @@
 
 </div>
 
-<footer style="
-  background: #3f8fb8;
-  color: white;
-  text-align: center;
-  padding: 20px 16px;
-  margin-top: 60px;
-  font-family: 'Lexend', sans-serif;
-  font-size: 12px;
-  position: relative;
-  overflow: hidden;
-">
-  <div style="max-width: 1400px; margin: 0 auto;">
-    <p style="margin: 0; opacity: 0.95;">
-      © 2026 - Akrocever IA | Proyecto independiente impulsado con IA
+
+<footer class="akrocever-footer">
+  <div class="footer-content">
+    <p>
+      © Akrocever 2026 | Proyecto independiente impulsado por IA
+    </p>
+    <p>
+      Todos los derechos reservados.
     </p>
   </div>
-
-  <div style="
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(90deg, transparent 20%, rgba(255,255,255,0.15) 50%, transparent 80%);
-    animation: shineHorizontal 8s linear infinite;
-    pointer-events: none;
-  "></div>
 </footer>
+
+<style>
+  .akrocever-footer {
+    width: 100%;
+    background: #003366;
+    color: #ffffff;
+    text-align: center;
+    padding: 24px 12px;
+    margin-top: 60px;
+    font-family: 'Lexend', sans-serif;
+    font-size: 12px;
+    line-height: 1.6;
+    box-sizing: border-box;
+  }
+
+  .akrocever-footer .footer-content {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .akrocever-footer p {
+    margin: 0;
+    padding: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .akrocever-footer p + p {
+    margin-top: 12px;
+  }
+
+  @media (max-width: 480px) {
+    .akrocever-footer {
+      padding: 20px 10px;
+      font-size: 10px;
+      margin-top: 40px;
+    }
+
+    .akrocever-footer p + p {
+      margin-top: 8px;
+    }
+  }
+</style>
 
 </body>
 </html>
