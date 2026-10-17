@@ -20,13 +20,11 @@
     const URL_LOGIN   = 'https://akrocever.github.io/user/login.html';
 
     async function protegerSubpagina() {
-      // 1. Evitar que la subpágina se abra fuera del iframe
       if (window === window.top) {
         window.top.location.href = URL_LOGIN;
         return;
       }
 
-      // 2. Verificar que la librería de Supabase esté disponible
       if (!window.supabase || !window.supabase.createClient) {
         window.top.location.href = URL_LOGIN;
         return;
@@ -38,11 +36,9 @@
         const { data: { session }, error } = await clientSupabase.auth.getSession();
 
         if (error || !session) {
-          // Si no hay sesión de Supabase iniciada, enviar a Login fuera del iframe
           window.top.location.href = URL_LOGIN;
         } else {
-          // Si el usuario está autenticado, mostrar el contenido como flex
-          document.body.style.display = 'flex';
+          document.body.style.display = 'block';
         }
       } catch (err) {
         console.error('Error al validar sesión:', err);
@@ -62,31 +58,24 @@
       -moz-osx-font-smoothing: grayscale;
     }
 
-    html {
+    html, body {
       width: 100%;
-      height: 100%;
+      overflow-x: hidden;
     }
 
     body {
       background: #ffffff;
       color: #1e293b;
-      min-height: 100%;
-      display: flex;
-      flex-direction: column;
+      min-height: 100vh;
+      /* Ajustado: Eliminamos los padding laterales (dejando 0px) para que el footer toque los bordes */
+      padding: 8px 0px 0px 0px;
       font-family: 'Orbitron', sans-serif;
-      overflow-x: hidden;
-      display: none; /* Oculto hasta que Supabase valide la sesión */
-    }
-
-    .main-content {
-      flex: 1;
-      padding: 8px 16px 24px 16px;
-      width: 100%;
     }
 
     .container {
       max-width: 1400px;
       margin: 0 auto;
+      padding: 0 16px; /* Mantiene el margen interior para el contenido principal */
     }
 
     :root {
@@ -203,7 +192,7 @@
       color: #64748b;
     }
 
-    /* ── Cuadrícula para los Planes de Inversión (2 columnas en PC) ── */
+    /* ── Cuadrícula para los Planes de Inversión ── */
     .plans-grid {
       display: grid;
       gap: 20px;
@@ -293,7 +282,7 @@
     .detalles div { display: flex; justify-content: space-between; margin: 6px 0; }
     .detalles strong { font-size: 14px; }
 
-    /* ── Cuadrícula para el Control de Capital con Estilo de Tarjeta ── */
+    /* ── Cuadrícula para el Control de Capital ── */
     .capital-grid {
       display: grid;
       gap: 20px;
@@ -436,370 +425,353 @@
     @keyframes fadeUp {
       to { opacity: 1; transform: translateY(0); }
     }
-
-    /* ── Footer Corregido para Móviles ── */
-    footer.site-footer {
-      background: #003366;
-      color: white;
-      text-align: center;
-      padding: 16px;
-      font-family: 'Lexend', sans-serif;
-      font-size: 11px;
-      width: 100%;
-      box-sizing: border-box;
-      line-height: 1.5;
-      margin-top: auto;
-      position: relative;
-      overflow: hidden;
-      flex-shrink: 0; /* Evita que el footer se comprima o corte */
-    }
-
-    footer.site-footer p {
-      margin: 0;
-      opacity: 0.95;
-    }
-
-    footer.site-footer p + p {
-      margin-top: 4px;
-    }
   </style>
 </head>
 
-<body>
+<body style="display: none;">
 
-<div class="main-content">
-  <div class="container">
+<div class="container">
 
-    <!-- Sección CONTROL DE GANANCIAS -->
-    <h2 class="section-title">CONTROL DE GANANCIAS</h2>
+  <!-- Sección CONTROL DE GANANCIAS -->
+  <h2 class="section-title">CONTROL DE GANANCIAS</h2>
 
-    <div class="dashboard">
-      <div class="card">
-        <div class="card-header">
-          <div class="icon">
-            <svg viewBox="0 0 24 24" width="24" height="24" stroke="#3e8fb8" stroke-width="2" fill="none"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
-          </div>
-          SALDO ACTUAL
+  <div class="dashboard">
+    <div class="card">
+      <div class="card-header">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" width="24" height="24" stroke="#3e8fb8" stroke-width="2" fill="none"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
         </div>
-        <div class="card-body">
-          <div class="amount">$0.00<span class="currency">MXN</span></div>
-          <div class="desc">Ingresos pasivos, pendiente para recibir</div>
-        </div>
+        SALDO ACTUAL
       </div>
-
-      <div class="card">
-        <div class="card-header">
-          <div class="icon"><span class="icon-text">$</span></div>   
-          GANANCIAS GENERADAS
-        </div>
-        <div class="card-body">
-          <div class="amount">$0.00<span class="currency">MXN</span></div>
-          <div class="desc">Utilidad</div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-header">
-          <div class="icon">
-            <svg viewBox="0 0 24 24" width="24" height="24" stroke="#3e8fb8" stroke-width="2" fill="none"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-          </div>
-          TOTAL DE INGRESOS
-        </div>
-        <div class="card-body">
-          <div class="amount">$0.00<span class="currency">MXN</span></div>
-          <div class="desc">Retorno de capital + Utilidad</div>
-          <div class="desc"> (desde que inició) </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-header">
-          <div class="icon">
-            <svg viewBox="0 0 24 24" width="24" height="24" stroke="#3e8fb8" stroke-width="2" fill="none"><path d="M20 6L9 17l-5-5"/></svg>
-          </div>
-          INGRESOS RECIBIDOS
-        </div>
-        <div class="card-body">
-          <div class="amount">$0.00<span class="currency">MXN</span></div>
-          <div class="desc">Retorno de capital + Utilidad</div>
-          <div class="desc"> (Ya transferido a tu cuenta) </div>
-        </div>
+      <div class="card-body">
+        <div class="amount">$0.00<span class="currency">MXN</span></div>
+        <div class="desc">Ingresos pasivos, pendiente para recibir</div>
       </div>
     </div>
 
-    <!-- Sección CAMPAÑAS PUBLICITARIAS -->
-    <h2 class="section-title">CAMPAÑAS PUBLICITARIAS</h2>
-
-    <div class="plans-grid">
-      <!-- Plan 1 -->
-      <div class="investment-card">
-        <div class="investment-header" id="planTitulo1">EMPRESA</div>
-        <img src="https://i.ibb.co/cKP8Kd5s/Picsart-26-10-10-01-15-51-826.png" 
-               style="width: 100%; height: auto; display: block;">
-        <div class="row">
-          <div>
-            <div>Progreso</div>
-            <div class="estado">
-              <div class="dot" id="dot1"></div>
-              <span id="estado1">Activar</span>
-            </div>
-          </div>
-          <div style="text-align:right">
-            <div>Rentabilidad</div>
-            <strong id="rentabilidad1">$0,00 MXN</strong>
-          </div>
-        </div>
-        <div class="bar-wrapper">
-          <div class="bar-container">
-            <div class="bar-main" id="barMain1" style="width: 0%;"></div>
-            <div class="bar-blue" id="barBlue1" style="width: 100%;"></div>
-          </div>
-          <div class="progress-dot" id="progressDot1" style="left: 0%;"></div>
-        </div>
-        <div class="fecha">Fecha de inicio — <span id="fecha1">••/••/2026</span></div>
-        <div class="detalles">
-          <div><span>Ganancia</span><span id="ganancia1">(50% de utilidad) $100.00 MXN</span></div>
-          <div><strong>Total a recibir</strong><strong id="total1">$300.00 MXN</strong></div>
-        </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="icon"><span class="icon-text">$</span></div>   
+        GANANCIAS GENERADAS
       </div>
-
-      <!-- Plan 2 -->
-      <div class="investment-card oculto">
-        <div class="investment-header" id="planTitulo2">EMPRESA</div>
-        <div class="row">
-          <div>
-            <div>Progreso</div>
-            <div class="estado">
-              <div class="dot" id="dot2"></div>
-              <span id="estado2">Activar</span>
-            </div>
-          </div>
-          <div style="text-align:right">
-            <div>Rentabilidad</div>
-            <strong id="rentabilidad2">$0,00 USD</strong>
-          </div>
-        </div>
-        <div class="bar-wrapper">
-          <div class="bar-container">
-            <div class="bar-main" id="barMain2" style="width: 0%;"></div>
-            <div class="bar-blue" id="barBlue2" style="width: 100%;"></div>
-          </div>
-          <div class="progress-dot" id="progressDot2" style="left: 0%;"></div>
-        </div>
-        <div class="fecha">Fecha de inicio — <span id="fecha2">••/••/2026</span></div>
-        <div class="detalles">
-          <div><span>Ganancia</span><span id="ganancia2">(50% de utilidad) $5.00 USD</span></div>
-          <div><strong>Total a recibir</strong><strong id="total2">$15.00 USD</strong></div>
-        </div>
-      </div>
-
-      <!-- Plan 3 -->
-      <div class="investment-card oculto">
-        <div class="investment-header" id="planTitulo3">EMPRESA</div>
-        <div class="row">
-          <div>
-            <div>Progreso</div>
-            <div class="estado">
-              <div class="dot" id="dot3"></div>
-              <span id="estado3">Activar</span>
-            </div>
-          </div>
-          <div style="text-align:right">
-            <div>Rentabilidad</div>
-            <strong id="rentabilidad3">$0,00 USD</strong>
-          </div>
-        </div>
-        <div class="bar-wrapper">
-          <div class="bar-container">
-            <div class="bar-main" id="barMain3" style="width: 0%;"></div>
-            <div class="bar-blue" id="barBlue3" style="width: 100%;"></div>
-          </div>
-          <div class="progress-dot" id="progressDot3" style="left: 0%;"></div>
-        </div>
-        <div class="fecha">Fecha de inicio — <span id="fecha3">••/••/2026</span></div>
-        <div class="detalles">
-          <div><span>Ganancia</span><span id="ganancia3">(50% de utilidad) $5.00 USD</span></div>
-          <div><strong>Total a recibir</strong><strong id="total3">$15.00 USD</strong></div>
-        </div>
-      </div>
-
-      <!-- Plan 4 -->
-      <div class="investment-card oculto">
-        <div class="investment-header" id="planTitulo4">EMPRESA</div>
-        <div class="row">
-          <div>
-            <div>Progreso</div>
-            <div class="estado">
-              <div class="dot" id="dot4"></div>
-              <span id="estado4">Activar</span>
-            </div>
-          </div>
-          <div style="text-align:right">
-            <div>Rentabilidad</div>
-            <strong id="rentabilidad4">$0,00 USD</strong>
-          </div>
-        </div>
-        <div class="bar-wrapper">
-          <div class="bar-container">
-            <div class="bar-main" id="barMain4" style="width: 0%;"></div>
-            <div class="bar-blue" id="barBlue4" style="width: 100%;"></div>
-          </div>
-          <div class="progress-dot" id="progressDot4" style="left: 0%;"></div>
-        </div>
-        <div class="fecha">Fecha de inicio — <span id="fecha4">••/••/2026</span></div>
-        <div class="detalles">
-          <div><span>Ganancia</span><span id="ganancia4">(50% de utilidad) $5.00 USD</span></div>
-          <div><strong>Total a recibir</strong><strong id="total4">$15.00 USD</strong></div>
-        </div>
-      </div>
-
-      <!-- Plan 5 -->
-      <div class="investment-card oculto">
-        <div class="investment-header" id="planTitulo5">EMPRESA</div>
-        <div class="row">
-          <div>
-            <div>Progreso</div>
-            <div class="estado">
-              <div class="dot" id="dot5"></div>
-              <span id="estado5">Activar</span>
-            </div>
-          </div>
-          <div style="text-align:right">
-            <div>Rentabilidad</div>
-            <strong id="rentabilidad5">$0,00 USD</strong>
-          </div>
-        </div>
-        <div class="bar-wrapper">
-          <div class="bar-container">
-            <div class="bar-main" id="barMain5" style="width: 0%;"></div>
-            <div class="bar-blue" id="barBlue5" style="width: 100%;"></div>
-          </div>
-          <div class="progress-dot" id="progressDot5" style="left: 0%;"></div>
-        </div>
-        <div class="fecha">Fecha de inicio — <span id="fecha5">••/••/2026</span></div>
-        <div class="detalles">
-          <div><span>Ganancia</span><span id="ganancia5">(50% de utilidad) $5.00 USD</span></div>
-          <div><strong>Total a recibir</strong><strong id="total5">$15.00 USD</strong></div>
-        </div>
-      </div>
-
-      <!-- Plan 6 -->
-      <div class="investment-card oculto">
-        <div class="investment-header" id="planTitulo6">EMPRESA</div>
-        <div class="row">
-          <div>
-            <div>Progreso</div>
-            <div class="estado">
-              <div class="dot" id="dot6"></div>
-              <span id="estado6">Activar</span>
-            </div>
-          </div>
-          <div style="text-align:right">
-            <div>Rentabilidad</div>
-            <strong id="rentabilidad6">$0,00 USD</strong>
-          </div>
-        </div>
-        <div class="bar-wrapper">
-          <div class="bar-container">
-            <div class="bar-main" id="barMain6" style="width: 0%;"></div>
-            <div class="bar-blue" id="barBlue6" style="width: 100%;"></div>
-          </div>
-          <div class="progress-dot" id="progressDot6" style="left: 0%;"></div>
-        </div>
-        <div class="fecha">Fecha de inicio — <span id="fecha6">••/••/2026</span></div>
-        <div class="detalles">
-          <div><span>Ganancia</span><span id="ganancia6">(50% de utilidad) $5.00 USD</span></div>
-          <div><strong>Total a recibir</strong><strong id="total6">$15.00 USD</strong></div>
-        </div>
+      <div class="card-body">
+        <div class="amount">$0.00<span class="currency">MXN</span></div>
+        <div class="desc">Utilidad</div>
       </div>
     </div>
 
-    <!-- Sección CONTROL DE CAPITAL -->
-    <h2 class="section-title">CONTROL DE CAPITAL</h2>
-
-    <div class="capital-grid">
-      <div class="section">
-        <div class="title">Capital actual en movimiento:</div>
-        <div>
-          <span class="amount">$0.00</span>
-          <span class="currency">MXN</span>
+    <div class="card">
+      <div class="card-header">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" width="24" height="24" stroke="#3e8fb8" stroke-width="2" fill="none"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
         </div>
+        TOTAL DE INGRESOS
       </div>
-
-      <div class="section">
-        <div class="title">Total invertido en efectivo:</div>
-        <div>
-          <span class="amount">$0.00</span>
-          <span class="currency">MXN</span>
-        </div>
+      <div class="card-body">
+        <div class="amount">$0.00<span class="currency">MXN</span></div>
+        <div class="desc">Retorno de capital + Utilidad</div>
+        <div class="desc"> (desde que inició) </div>
       </div>
     </div>
 
-    <div class="completed-section">
-      <h2 class="section-title">RESUMEN DE OPERACIONES</h2>
-
-      <div class="completed-card">
-        <div class="completed-header">INVERSIONES</div>
-        <div class="table-wrapper">
-          <table class="completed-table">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Plan</th>
-                <th>Concepto</th>
-                <th>Ganancia generada</th>
-                <th>Fecha</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><span>0</span></td>
-                <td><span>---</span></td>
-                <td><span>---</span></td>
-                <td><span>0.00 MXN</span></td>
-                <td><span>--/--/2026</span></td>
-              </tr>
-            </tbody>
-          </table>
+    <div class="card">
+      <div class="card-header">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" width="24" height="24" stroke="#3e8fb8" stroke-width="2" fill="none"><path d="M20 6L9 17l-5-5"/></svg>
         </div>
+        INGRESOS RECIBIDOS
       </div>
-
-      <div class="completed-card">
-        <div class="completed-header">DEPÓSITOS</div>
-        <div class="table-wrapper">
-          <table class="completed-table">
-            <thead>
-              <tr>
-                <th>Concepto</th>
-                <th>Monto</th>
-                <th>Fecha</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><span>--</span></td>
-                <td><span>0.00 MXN</span></td>
-                <td><span>--/--/2026</span></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+      <div class="card-body">
+        <div class="amount">$0.00<span class="currency">MXN</span></div>
+        <div class="desc">Retorno de capital + Utilidad</div>
+        <div class="desc"> (Ya transferido a tu cuenta) </div>
       </div>
     </div>
-
   </div>
+
+  <!-- Sección CAMPAÑAS PUBLICITARIAS -->
+  <h2 class="section-title">CAMPAÑAS PUBLICITARIAS</h2>
+
+  <div class="plans-grid">
+    <!-- Plan 1 -->
+    <div class="investment-card">
+      <div class="investment-header" id="planTitulo1">EMPRESA</div>
+      <img src="https://i.ibb.co/cKP8Kd5s/Picsart-26-10-10-01-15-51-826.png" 
+             style="width: 100%; height: auto; display: block;">
+      <div class="row">
+        <div>
+          <div>Progreso</div>
+          <div class="estado">
+            <div class="dot" id="dot1"></div>
+            <span id="estado1">Activar</span>
+          </div>
+        </div>
+        <div style="text-align:right">
+          <div>Rentabilidad</div>
+          <strong id="rentabilidad1">$0,00 MXN</strong>
+        </div>
+      </div>
+      <div class="bar-wrapper">
+        <div class="bar-container">
+          <div class="bar-main" id="barMain1" style="width: 0%;"></div>
+          <div class="bar-blue" id="barBlue1" style="width: 100%;"></div>
+        </div>
+        <div class="progress-dot" id="progressDot1" style="left: 0%;"></div>
+      </div>
+      <div class="fecha">Fecha de inicio — <span id="fecha1">••/••/2026</span></div>
+      <div class="detalles">
+        <div><span>Ganancia</span><span id="ganancia1">(50% de utilidad) $100.00 MXN</span></div>
+        <div><strong>Total a recibir</strong><strong id="total1">$300.00 MXN</strong></div>
+      </div>
+    </div>
+
+    <!-- Plan 2 -->
+    <div class="investment-card oculto">
+      <div class="investment-header" id="planTitulo2">EMPRESA</div>
+      <div class="row">
+        <div>
+          <div>Progreso</div>
+          <div class="estado">
+            <div class="dot" id="dot2"></div>
+            <span id="estado2">Activar</span>
+          </div>
+        </div>
+        <div style="text-align:right">
+          <div>Rentabilidad</div>
+          <strong id="rentabilidad2">$0,00 USD</strong>
+        </div>
+      </div>
+      <div class="bar-wrapper">
+        <div class="bar-container">
+          <div class="bar-main" id="barMain2" style="width: 0%;"></div>
+          <div class="bar-blue" id="barBlue2" style="width: 100%;"></div>
+        </div>
+        <div class="progress-dot" id="progressDot2" style="left: 0%;"></div>
+      </div>
+      <div class="fecha">Fecha de inicio — <span id="fecha2">••/••/2026</span></div>
+      <div class="detalles">
+        <div><span>Ganancia</span><span id="ganancia2">(50% de utilidad) $5.00 USD</span></div>
+        <div><strong>Total a recibir</strong><strong id="total2">$15.00 USD</strong></div>
+      </div>
+    </div>
+
+    <!-- Plan 3 -->
+    <div class="investment-card oculto">
+      <div class="investment-header" id="planTitulo3">EMPRESA</div>
+      <div class="row">
+        <div>
+          <div>Progreso</div>
+          <div class="estado">
+            <div class="dot" id="dot3"></div>
+            <span id="estado3">Activar</span>
+          </div>
+        </div>
+        <div style="text-align:right">
+          <div>Rentabilidad</div>
+          <strong id="rentabilidad3">$0,00 USD</strong>
+        </div>
+      </div>
+      <div class="bar-wrapper">
+        <div class="bar-container">
+          <div class="bar-main" id="barMain3" style="width: 0%;"></div>
+          <div class="bar-blue" id="barBlue3" style="width: 100%;"></div>
+        </div>
+        <div class="progress-dot" id="progressDot3" style="left: 0%;"></div>
+      </div>
+      <div class="fecha">Fecha de inicio — <span id="fecha3">••/••/2026</span></div>
+      <div class="detalles">
+        <div><span>Ganancia</span><span id="ganancia3">(50% de utilidad) $5.00 USD</span></div>
+        <div><strong>Total a recibir</strong><strong id="total3">$15.00 USD</strong></div>
+      </div>
+    </div>
+
+    <!-- Plan 4 -->
+    <div class="investment-card oculto">
+      <div class="investment-header" id="planTitulo4">EMPRESA</div>
+      <div class="row">
+        <div>
+          <div>Progreso</div>
+          <div class="estado">
+            <div class="dot" id="dot4"></div>
+            <span id="estado4">Activar</span>
+          </div>
+        </div>
+        <div style="text-align:right">
+          <div>Rentabilidad</div>
+          <strong id="rentabilidad4">$0,00 USD</strong>
+        </div>
+      </div>
+      <div class="bar-wrapper">
+        <div class="bar-container">
+          <div class="bar-main" id="barMain4" style="width: 0%;"></div>
+          <div class="bar-blue" id="barBlue4" style="width: 100%;"></div>
+        </div>
+        <div class="progress-dot" id="progressDot4" style="left: 0%;"></div>
+      </div>
+      <div class="fecha">Fecha de inicio — <span id="fecha4">••/••/2026</span></div>
+      <div class="detalles">
+        <div><span>Ganancia</span><span id="ganancia4">(50% de utilidad) $5.00 USD</span></div>
+        <div><strong>Total a recibir</strong><strong id="total4">$15.00 USD</strong></div>
+      </div>
+    </div>
+
+    <!-- Plan 5 -->
+    <div class="investment-card oculto">
+      <div class="investment-header" id="planTitulo5">EMPRESA</div>
+      <div class="row">
+        <div>
+          <div>Progreso</div>
+          <div class="estado">
+            <div class="dot" id="dot5"></div>
+            <span id="estado5">Activar</span>
+          </div>
+        </div>
+        <div style="text-align:right">
+          <div>Rentabilidad</div>
+          <strong id="rentabilidad5">$0,00 USD</strong>
+        </div>
+      </div>
+      <div class="bar-wrapper">
+        <div class="bar-container">
+          <div class="bar-main" id="barMain5" style="width: 0%;"></div>
+          <div class="bar-blue" id="barBlue5" style="width: 100%;"></div>
+        </div>
+        <div class="progress-dot" id="progressDot5" style="left: 0%;"></div>
+      </div>
+      <div class="fecha">Fecha de inicio — <span id="fecha5">••/••/2026</span></div>
+      <div class="detalles">
+        <div><span>Ganancia</span><span id="ganancia5">(50% de utilidad) $5.00 USD</span></div>
+        <div><strong>Total a recibir</strong><strong id="total5">$15.00 USD</strong></div>
+      </div>
+    </div>
+
+    <!-- Plan 6 -->
+    <div class="investment-card oculto">
+      <div class="investment-header" id="planTitulo6">EMPRESA</div>
+      <div class="row">
+        <div>
+          <div>Progreso</div>
+          <div class="estado">
+            <div class="dot" id="dot6"></div>
+            <span id="estado6">Activar</span>
+          </div>
+        </div>
+        <div style="text-align:right">
+          <div>Rentabilidad</div>
+          <strong id="rentabilidad6">$0,00 USD</strong>
+        </div>
+      </div>
+      <div class="bar-wrapper">
+        <div class="bar-container">
+          <div class="bar-main" id="barMain6" style="width: 0%;"></div>
+          <div class="bar-blue" id="barBlue6" style="width: 100%;"></div>
+        </div>
+        <div class="progress-dot" id="progressDot6" style="left: 0%;"></div>
+      </div>
+      <div class="fecha">Fecha de inicio — <span id="fecha6">••/••/2026</span></div>
+      <div class="detalles">
+        <div><span>Ganancia</span><span id="ganancia6">(50% de utilidad) $5.00 USD</span></div>
+        <div><strong>Total a recibir</strong><strong id="total6">$15.00 USD</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sección CONTROL DE CAPITAL -->
+  <h2 class="section-title">CONTROL DE CAPITAL</h2>
+
+  <div class="capital-grid">
+    <div class="section">
+      <div class="title">Capital actual en movimiento:</div>
+      <div>
+        <span class="amount">$0.00</span>
+        <span class="currency">MXN</span>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="title">Total invertido en efectivo:</div>
+      <div>
+        <span class="amount">$0.00</span>
+        <span class="currency">MXN</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="completed-section">
+    <h2 class="section-title">RESUMEN DE OPERACIONES</h2>
+
+    <div class="completed-card">
+      <div class="completed-header">INVERSIONES</div>
+      <div class="table-wrapper">
+        <table class="completed-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Plan</th>
+              <th>Concepto</th>
+              <th>Ganancia generada</th>
+              <th>Fecha</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span>0</span></td>
+              <td><span>---</span></td>
+              <td><span>---</span></td>
+              <td><span>0.00 MXN</span></td>
+              <td><span>--/--/2026</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="completed-card">
+      <div class="completed-header">DEPÓSITOS</div>
+      <div class="table-wrapper">
+        <table class="completed-table">
+          <thead>
+            <tr>
+              <th>Concepto</th>
+              <th>Monto</th>
+              <th>Fecha</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span>--</span></td>
+              <td><span>0.00 MXN</span></td>
+              <td><span>--/--/2026</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
 </div>
 
-<footer class="site-footer">  
-  <p>© Akrocever 2026 | Proyecto independiente impulsado por IA</p>  
-  <p>Todos los derechos reservados.</p>  
-  <div style="
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(90deg, transparent 20%, rgba(255,255,255,0.15) 50%, transparent 80%);
-    animation: shineHorizontal 8s linear infinite;
-    pointer-events: none;
-  "></div>
+<!-- Pie de página actualizado (Ancho completo, azul #003366 y letras pequeñas) -->
+<footer style="
+  background: #003366;
+  color: white;
+  text-align: center;
+  padding: 16px 16px;
+  margin-top: 60px;
+  width: 100%;
+  font-family: 'Lexend', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  position: relative;
+">
+  <div style="max-width: 1400px; margin: 0 auto;">
+    <p style="margin: 0; opacity: 0.95;">
+      © Akrocever 2026 | Proyecto independiente impulsado por IA
+    </p>
+    <p style="margin: 4px 0 0; opacity: 0.8;">
+      Todos los derechos reservados.
+    </p>
+  </div>
 </footer>
 
 <script>
