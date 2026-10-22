@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&family=Orbitron:wght@600;700&display=swap" rel="stylesheet">
+
+    <!-- Importar las fuentes Orbitron y Lexend desde Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&family=Orbitron:wght@600;800;900&display=swap" rel="stylesheet">
+
+  <!-- Supabase JS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    const supabaseUrl = 'https://atiihfgjbpvtjglestyw.supabase.co'; 
+    const supabaseKey = 'sb_publishable_CpzuF8Op8fYh_9znf-tHXg_Ba9xNMnP'; 
+    const URL_LOGIN   = 'https://akrocever.github.io/user/login.html';
+
+    async function protegerSubpaginaFreelance() {
+      // 1. Evitar que la subpágina se abra sola fuera del iframe
+      if (window === window.top) {
+        window.top.location.href = URL_LOGIN;
+        return;
+      }
+
+      // 2. Verificar librería Supabase
+      if (!window.supabase || !window.supabase.createClient) {
+        window.top.location.href = URL_LOGIN;
+        return;
+      }
+
+      const clientSupabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+      try {
+        // 3. Validar que exista sesión
+        const { data: { session }, error } = await clientSupabase.auth.getSession();
+
+        if (error || !session) {
+          window.top.location.href = URL_LOGIN;
+        } else {
+          // Muestra el contenido dentro del iframe
+          document.body.style.display = 'block';
+        }
+      } catch (err) {
+        console.error('Error al validar sesión:', err);
+        window.top.location.href = URL_LOGIN;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', protegerSubpaginaFreelance);
+  </script>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Lexend', sans-serif;
+      background: #f4f6f8;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start; 
+      min-height: 100vh;
+      padding-top: 10px; 
+      padding-bottom: 0px;
+    }
+
+    .main-wrapper {
+      width: 100%;
+      max-width: 750px;
+      padding: 10px;
+      flex: 1;
+    }
+
+    /* 🔹 REGLA GLOBAL PARA IMÁGENES */
+    img {
+      max-width: 100%; 
+      height: auto;    
+      display: block;
+      margin: 0 auto;  
+    }
+
+    /* 🔹 ESTILO GENERAL DE TARJETAS */
+    .section-card {
+      background: #ffffff;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #cccccc;
+    }
+
+    .news-container {
+      padding: 20px;
+    }
+
+    .news-profile {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .profile-pic {
+      width: 45px;
+      height: 45px;
+      background-color: #003366; 
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 20px;
+      margin-right: 12px;
+    }
+
+    .profile-info h4 {
+      font-size: 14px;
+      color: #333;
+      font-weight: 700;
+    }
+
+    .profile-info p {
+      font-size: 11px;
+      color: #666;
+    }
+
+    .news-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 16px;
+      color: #003366;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      line-height: 1.3;
+    }
+
+    .news-text {
+      font-size: 14px;
+      line-height: 1.5;
+      color: #444;
+      margin-bottom: 12px;
+    }
+
+    /* 🔹 ESTILOS ESPECÍFICOS PARA LISTAS Y BLOQUES */
+    .intro-box {
+      background: #eef4f9;
+      padding: 15px;
+      border-radius: 8px;
+      border-left: 4px solid #003366;
+      margin-bottom: 15px;
+    }
+
+    .help-list {
+      list-style: none;
+      margin: 10px 0 15px 0;
+    }
+
+    .help-list li {
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: #333;
+    }
+
+    /* 🔹 ESTILO DEL BOTÓN DE WHATSAPP */
+    .whatsapp-btn {
+      display: inline-block;
+      background-color: #25d366;
+      color: #ffffff;
+      font-family: 'Lexend', sans-serif;
+      font-weight: 600;
+      font-size: 15px;
+      text-align: center;
+      text-decoration: none;
+      padding: 12px 20px;
+      border-radius: 6px;
+      width: 100%;
+      transition: background-color 0.3s ease;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .whatsapp-btn:hover {
+      background-color: #1ebe5d;
+    }
+
+    .sub-section-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 13px;
+      color: #003366;
+      margin-top: 15px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    .tip-box {
+      background: #fff9db;
+      border: 1px solid #ffe066;
+      padding: 12px;
+      border-radius: 6px;
+      margin-top: 15px;
+      font-size: 13px;
+      color: #594200;
+    }
+
+    /* 🔹 ESTILO DEL PIE DE PÁGINA (FOOTER) */
+    .site-footer {
+      width: 100%;
+      background-color: #003366;
+      color: #ffffff;
+      text-align: center;
+      padding: 15px 15px;
+      margin-top: 30px;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .site-footer p {
+      margin-bottom: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="main-wrapper">
+
+    <!-- Tarjeta Principal de Presentación y Ayuda -->
+    <div class="section-card">
+      <div class="news-container">
+        
+        <div class="news-profile">
+          <div class="profile-pic">A</div>
+          <div class="profile-info">
+            <h4>Akrocever Oficial</h4>
+            <p>Actualización Octubre 2026 • ✅ </p>
+          </div>
+        </div>
+
+        <h3 class="news-title">Creación de Campañas Publicitarias</h3>
+        <p class="news-text" style="font-weight: 500; color: #003366;">
+          Si aún no cuentas con la experiencia de crear una campaña publicitaria para tu anuncio en Facebook nosotros te podemos ayudar.
+        </p>
+
+        <div class="intro-box">
+          <p class="news-text" style="font-weight: 700; margin-bottom: 8px; color: #003366;">¿En qué te podemos ayudar?</p>
+          <ul class="help-list">
+            <li>✔ Te creamos una página en Facebook</li>
+            <li>✔ Te diseñamos un flyer</li>
+            <li>✔ Publicamos tu campaña publicitaria por ti</li>
+          </ul>
+
+          <!-- Botón de WhatsApp agregado -->
+          <a href="https://wa.me/528117967047?text=Hola,%20me%20interesa%20solicitar%20apoyo%20con%20mis%20campañas%20publicitarias." class="whatsapp-btn" target="_blank">
+            💬 Solicitar apoyo
+          </a>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Tema 1: Cómo Creo Mi Página de Facebook -->
+    <div class="section-card">
+      <div class="news-container">
+        <h3 class="news-title">1.- ¿Cómo creo mi página de Facebook?</h3>
+        <p class="news-text">
+          Aquí tienes una forma efectiva de cómo crear un perfil de Facebook con más difusión y sin limitaciones para publicar tus vacantes.
+        </p>
+
+        <h4 class="sub-section-title">Crear un perfil exclusivo para reclutamiento</h4>
+        <p class="news-text">
+          ✅ Es más recomendable usar un nombre de una marca inventada o tu nombre.<br>
+          ❌ No es recomendable poner "bolsa de trabajo" o "empleos mty", ya que a esas páginas las reporta más Facebook.<br>
+          ✅ Lo que sí puedes poner es como "Empleos (tu nombre u otra palabra inventada)" por ejemplo <em>"Empleos MBT"</em>.<br>
+          ✅ Puedes agregar una imagen relacionada con el reclutamiento o tu foto personal, como prefieras.
+        </p>
+
+        <h4 class="sub-section-title">Mantener activa tu página</h4>
+        <p class="news-text">
+          ✅ <strong>Publica al menos una vez al día en tu perfil.</strong><br>
+          Esto hará que tu cuenta se vea más atractiva para las personas que buscan empleo. Pensarán que tienes más vacantes para ofrecer y explorarán tu perfil.<br><br>
+          ✅ <strong>Fija una publicación en tu perfil:</strong><br>
+          En esa publicación puedes ofrecer varias vacantes activas con entrevistas para el día siguiente. Puede ser:<br>
+          - Un texto corto<br>
+          - Una imagen<br>
+          - O un texto que hable sobre la cantidad de vacantes disponibles
+        </p>
+
+        <p class="news-text">
+          <strong>Ejemplos:</strong><br>
+          - Texto corto: “Vacantes disponibles. Entrevistas para mañana”<br>
+          - Imagen con texto: “Varias vacantes de empleo disponibles”<br>
+          <em>En esa publicación fijada, puedes agregar cada vacante específica en los comentarios.</em>
+        </p>
+
+        <p class="news-text">
+          ✅ <strong>Comparte Reels:</strong><br>
+          • Crea videos cortos sobre las vacantes. Los Reels generan mayor visibilidad y llegan a personas que están en búsqueda de empleo.
+        </p>
+
+        <div class="tip-box">
+          💡 <strong>Recuerda:</strong> Un perfil activo = <br>
+          📌 Más confianza<br>
+          📌 Más mensajes<br>
+          📌 Más candidatos.
+        </div>
+      </div>
+    </div>
+
+    <!-- Tema 2: Anuncio para Publicidad Pagada -->
+    <div class="section-card">
+      <div class="news-container">
+        <h3 class="news-title">2.- Anuncio para publicidad pagada</h3>
+        
+        <h4 class="sub-section-title">Cómo evitar el spam que cause bloqueo de anuncios:</h4>
+        <p class="news-text">
+          ❌ Evita poner muchas palabras.<br>
+          ❌ Si es una imagen, evita poner muchas palabras y dibujos.<br>
+          ❌ Evita exageraciones.<br>
+          ❌ Exceso de letras mayúsculas.<br>
+          ❌ Muchos emojis.<br><br>
+          ❌ No pongas texto como <em>"solo jóvenes"</em>, <em>"solo hombres"</em>, <em>"solo mujeres"</em>.<br>
+          ✅ Usa foto de personas trabajando, o el puesto.<br>
+          ✅ <strong>Texto principal:</strong> Describe el puesto. Ejemplo: <em>"Buscamos ayudantes generales."</em><br>
+          ❌ Evita preguntas o afirmaciones de atributos personales: no digas <em>"¿Estás desempleado?"</em> o <em>"¡Te quedas a trabajar!"</em>. Eso cae en Atributos Personales y te lo rechazan.<br><br>
+          ❌ <strong>No pongas la edad:</strong> como <em>"hombres y mujeres de 20-50 años"</em>, es la causa #1 de rechazo.<br>
+          ❌ No publiques números elevados: <em>"gana hasta $80,000 de utilidades"</em>, <em>"fondo de ahorro $15,000"</em> se marca como empleo engañoso, prestaciones engañosas o prácticas comerciales inaceptables.<br>
+          ❌ No poner todas las prestaciones y beneficios también se puede reportar como spam por exceso de palabras en tu anuncio.<br>
+          ✅ Poner solo lo que más le interesa a los candidatos como bonos, transporte, comedor subsidiado, vales de despensa, fondo de ahorro. Si son más, solo puedes poner <em>"y más prestaciones de ley"</em>.<br>
+          ✅ <strong>Ubicación coherente:</strong> Si la empresa está en Apodaca, Nuevo León, no segmentes la calle exacta. Pon solo el municipio, por ejemplo: <em>"Ubicado en Apodaca"</em>.
+        </p>
+      </div>
+    </div>
+
+    <!-- Tema 3: Proceso para mi Publicidad -->
+    <div class="section-card">
+      <div class="news-container">
+        <h3 class="news-title">3.- Proceso para mi publicidad</h3>
+        <p class="news-text">
+          ➡️ <strong>Cumple con las normas de Meta (muy importante)</strong><br>
+          Meta es estricta con los anuncios de empleo. Para evitar bloqueos:<br><br>
+          ➡️ <strong>Agregar botón para Mensajes por WhatsApp (opcional)</strong><br>
+          💡 Para vacantes locales, Mensajes + WhatsApp suele ser lo más efectivo.<br><br>
+          ➡️ <strong>Segmentación correcta (para vacantes de empleo)</strong><br>
+          ✅ Marca la Categoría Especial <em>"Empleo"</em>. Este es el paso más importante.<br><br>
+          ➡️ <strong>Agregar botón de WhatsApp antes de anunciar</strong><br>
+          • Vincular WhatsApp a tu página bien preparado.<br>
+          • Esto mejora la calidad de candidatos.<br>
+          💡 Mensajes por WhatsApp suele ser lo más efectivo.<br><br>
+          ➡️ 📍 <strong>Lugar:</strong> Apodaca, Nuevo León. México (Radio de 15–30 km)<br>
+          👥 <strong>Segmentación recomendada:</strong> Edad: 18–65+ (no limitar)<br><br>
+          ➡️ Selecciona el <strong>Presupuesto y Duración</strong><br>
+          💰 Presupuesto recomendado con Akrocever: $150 – $200 MXN (Probar mínimo 3–5 días)<br><br>
+          ➡️ Publicar continuamente: <em>"❌ No seleccionarlo"</em><br>
+          ➡️ Publicar durante el horario comercial: <em>"❌ No seleccionarlo"</em><br><br>
+          ➡️ Selecciona el <strong>método de pago</strong> (es más recomendable por vía transferencia SPEI).<br>
+          ⚠️ Esperar 1 minuto a que se refleje el saldo en tu wallet.<br><br>
+          ✅ Selecciona <strong>"Promocionar publicación"</strong> y ¡listo!
+        </p>
+      </div>
+    </div>
+
+  </div> <!-- Fin de .main-wrapper -->
+
+  <!-- 🔹 PIE DE PÁGINA -->
+  <footer class="site-footer">
+    <p>© Akrocever 2026 | Proyecto independiente impulsado por IA</p>
+    <p>Todos los derechos reservados.</p>
+  </footer>
+
+</body>
+</html>
